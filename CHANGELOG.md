@@ -1,3 +1,42 @@
+### 1.7.8: 2017-05-03
+
+* Update `johnpbloch/wordpress` to 4.7.4.1 (see https://github.com/johnpbloch/wordpress/issues/32)
+
+### 1.7.7: 2017-04-20
+
+* Update to WordPress 4.7.4
+
+### 1.7.6: 2017-03-06
+
+* Update to WordPress 4.7.3
+
+### 1.7.5: 2017-01-26
+
+* Update to WordPress 4.7.2
+
+### 1.7.4: 2017-01-11
+
+* Update to WordPress 4.7.1
+* Add Optional variables to `.env.example`
+* Remove unnecessary gitignore rules ([#286](https://github.com/roots/bedrock/pull/286))
+
+### 1.7.3: 2016-12-06
+
+* Update to WordPress 4.7
+* Default `WP_ENV` to `production` instead of `development` ([#277](https://github.com/roots/bedrock/pull/277))
+
+### 1.7.2: 2016-09-07
+
+* Update to WordPress 4.6.1
+
+### 1.7.1: 2016-08-16
+
+* Update to WordPress 4.6
+
+### 1.7.0: 2016-07-10
+
+* Bump PHP requirement to >= 5.6 (5.5 is no longer supported)
+
 ### 1.6.4: 2016-06-21
 
 * Update to WordPress 4.5.3
