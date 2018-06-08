@@ -4,7 +4,7 @@
 $root_dir = dirname(__DIR__);
 
 /** @var string Document Root */
-$webroot_dir = $root_dir . '/web';
+$webroot_dir = preg_replace('/\/releases\/\d+\//', '/current/', $root_dir . '/web');
 
 /**
  * Expose global env() function from oscarotero/env
