@@ -1,1 +1,7 @@
 path: web/wp
+@dev:
+  ssh: vagrant@example.test/srv/www/example/current
+@stag:
+  ssh: web@example.cocinilla.me/srv/www/example/current
+@prod:
+  ssh: web@example.com/srv/www/example/current
