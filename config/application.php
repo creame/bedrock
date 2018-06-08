@@ -75,6 +75,14 @@ define('AUTOMATIC_UPDATER_DISABLED', true);
 define('DISABLE_WP_CRON', env('DISABLE_WP_CRON') ?: false);
 define('DISALLOW_FILE_EDIT', true);
 
+define('WPLANG', 'es_ES');
+define('WP_POST_REVISIONS', 5);
+// define('WP_MEMORY_LIMIT', '64M');
+define('CREAME_SUPPORT_EMAIL', 'i@crea.me');
+
+// Main Theme (disable Wordpress core themes twenty...)
+// define('WP_DEFAULT_THEME', 'my-theme');
+
 /**
  * Bootstrap WordPress
  */
