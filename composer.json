@@ -48,7 +48,7 @@
     "wpackagist-plugin/simple-301-redirects": "^1.07",
     "wpackagist-plugin/autodescription": "^3.0",
     "wpackagist-plugin/autoptimize": "^2.3",
-    "wpackagist-plugin/simple-cache": "^1.6",
+    "wpackagist-plugin/cache-enabler": "^1.2",
     "wpackagist-plugin/google-analytics-dashboard-for-wp": "^5.3",
     "vendor/ithemes-security-pro": "^5.2"
   },
