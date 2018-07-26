@@ -77,7 +77,7 @@ define('DISALLOW_FILE_EDIT', true);
 
 define('WPLANG', 'es_ES');
 define('WP_POST_REVISIONS', 5);
-// define('WP_MEMORY_LIMIT', '64M');
+define('WP_MEMORY_LIMIT', '256M');
 define('CREAME_SUPPORT_EMAIL', 'i@crea.me');
 
 // Main Theme (disable Wordpress core themes twenty...)
