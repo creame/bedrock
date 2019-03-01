@@ -18,6 +18,7 @@ web/.htaccess
 
 # WP-CLI
 *.sql
+*.sql.gz
 
 # Dotenv
 .env
