@@ -20,6 +20,9 @@ web/.htaccess
 *.sql
 *.sql.gz
 
+# Logs
+*.log
+
 # Dotenv
 .env
 .env.*

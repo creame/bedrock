@@ -1,4 +1,6 @@
 path: web/wp
+server:
+  docroot: web
 @dev:
   ssh: vagrant@example.test/srv/www/example/current
 @stag:
