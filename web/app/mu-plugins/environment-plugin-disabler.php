@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Environment Plugin Disabler
  * Description: Disables plugins based on environment settings.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      Creame
  * Author URI:  https://crea.me/
  *
@@ -21,6 +21,7 @@
 
 /**
  * Class DisablePlugins
+ *
  * Author: Mark Jaquith
  * Author URI: http://markjaquith.com/
  * Class  URI: https://gist.github.com/markjaquith/1044546
@@ -30,7 +31,7 @@
 class DisablePlugins {
 
 	public static $instance;
-	private $disabled = [];
+	private $disabled = array();
 
 	/**
 	 * Sets up the options filter, and optionally handles an array of plugins to disable
@@ -38,24 +39,18 @@ class DisablePlugins {
 	 * @param array $disables Optional array of plugin filenames to disable
 	 */
 	public function __construct( array $disables = null ) {
-		/**
-		 * Handle what was passed in
-		 */
+		// Handle what was passed in
 		if ( is_array( $disables ) ) {
 			foreach ( $disables as $disable ) {
 				$this->disable( $disable );
 			}
 		}
 
-		/**
-		 * Add the filters
-		 */
-		add_filter( 'option_active_plugins', [ $this, 'do_disabling' ] );
-		add_filter( 'site_option_active_sitewide_plugins', [ $this, 'do_network_disabling' ] );
+		// Add the filters
+		add_filter( 'option_active_plugins', array( $this, 'do_disabling' ) );
+		add_filter( 'site_option_active_sitewide_plugins', array( $this, 'do_network_disabling' ) );
 
-		/**
-		 * Allow other plugins to access this instance
-		 */
+		// Allow other plugins to access this instance
 		self::$instance = $this;
 	}
 
@@ -106,20 +101,23 @@ class DisablePlugins {
 }
 
 
-/* Begin plugin disable initialization */
-
+/**
+ * Begin plugin disable initialization
+ */
 if ( defined( 'DISABLED_PLUGINS' ) ) {
 	$plugins_to_disable = unserialize( DISABLED_PLUGINS );
 
 	if ( ! empty( $plugins_to_disable ) && is_array( $plugins_to_disable ) ) {
 		$utility = new DisablePlugins( $plugins_to_disable );
 
-		// part below is optional but for me it is crucial
-		$info = array_map(
-			function( $item ) {
-				return explode( '/', $item )[0];
-			}, $plugins_to_disable
-		);
-		error_log( 'Environment disabled plugins: ' . implode( ', ', $info ) );
+		if ( defined( 'DISABLED_PLUGINS_LOG' ) && DISABLED_PLUGINS_LOG ) {
+			$info = array_map(
+				function( $item ) {
+					return explode( '/', $item )[0];
+				},
+				$plugins_to_disable
+			);
+			error_log( 'Env. disabled plugins: ' . implode( ', ', $info ) );
+		}
 	}
 }
