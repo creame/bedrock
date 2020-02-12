@@ -101,7 +101,7 @@ function creame_custom_intervention_admin() {
         'option-editor',
         'option-schemes',
         'option-shortcuts',
-        'option-toolbar',
+        // 'option-toolbar',
         'contact',
         'contact-web',
         'about',
@@ -391,7 +391,7 @@ function creame_move_scripts_to_footer() {
     add_action('wp_footer', 'wp_enqueue_scripts', 5);
     add_action('wp_footer', 'wp_print_head_scripts', 5);
 }
-// add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer');
+add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer');
 
 // Clean enqueued style and script tags
 function creame_clean_style_and_script_tags($tag) {
