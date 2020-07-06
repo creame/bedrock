@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.0.25
+Version:      1.0.28
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -39,6 +39,9 @@ function creame_custom_intervention_admin() {
     //     'Welcome',
     //     'Welcome to '.get_bloginfo('name')
     // ]);
+
+    // Remove Emoji
+    intervention('remove-emoji');
 
     // Add SVG Support
     intervention('add-svg-support', [
@@ -145,6 +148,7 @@ function creame_custom_intervention_admin() {
         'tool-import',
         'tool-export',
     ], 'all');
+
     if (defined('WP_ENV') && WP_ENV === 'production') {
         intervention('remove-menu-items', [
             'acf',
@@ -227,7 +231,8 @@ function creame_custom_admin_styles() {
     #wp-version-message,
     .wcpdf-extensions-ad, /* WooCommerce PDF Invoices & Packing Slips */
     .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
-    div[id^=gadwp-container-]>div:last-child, /* Google Analytics Dashboard for WP */
+    div[id^=gadwp-container-]>div:last-child, /* GADWP */
+    div[id^=gainwp-container-]>div:last-child, /* GAinWP */
     #cache-settings .notice-info, /* Cache enabler */
     #e-dashboard-overview .e-overview__feed /* Elementor dashboard widget */
     { display:none !important; }
@@ -259,6 +264,15 @@ function creame_hide_themes($wp_themes){
     return array_intersect_key($wp_themes, [WP_DEFAULT_THEME => 1]);
 }
 if (defined('WP_DEFAULT_THEME')) add_filter('wp_prepare_themes_for_js', 'creame_hide_themes');
+
+// Fix JetEngine assets path
+add_filter('cx_include_module_url', function($url, $path){
+    return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
+}, 10, 2);
+
+// Disable WooCommerce 4 noise
+add_filter('woocommerce_helper_suppress_connect_notice', '__return_true');
+add_filter('woocommerce_marketing_menu_items', '__return_empty_array');
 
 
 /**
@@ -310,7 +324,7 @@ remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
 
 // Remove oembed links
 remove_action('wp_head', 'wp_oembed_add_discovery_links');
-remove_action('wp_head', 'wp_oembed_add_host_js');
+// remove_action('wp_head', 'wp_oembed_add_host_js'); // emded.js
 
 // Remove rel links
 remove_action('wp_head', 'start_post_rel_link');
@@ -321,6 +335,10 @@ remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
 
 // Remove REST-API link
 remove_action('wp_head', 'rest_output_link_wp_head');
+
+// Disable REST-API
+// add_filter('json_enabled', '__return_false');
+// add_filter('json_jsonp_enabled', '__return_false');
 
 // Remove commments cookies
 remove_action('set_comment_cookies', 'wp_set_comment_cookies');
@@ -391,7 +409,7 @@ function creame_move_scripts_to_footer() {
     add_action('wp_footer', 'wp_enqueue_scripts', 5);
     add_action('wp_footer', 'wp_print_head_scripts', 5);
 }
-add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer');
+// add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer');
 
 // Clean enqueued style and script tags
 function creame_clean_style_and_script_tags($tag) {
@@ -429,6 +447,17 @@ if(!is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_pl
 
 // Elementor font-display https://developers.elementor.com/elementor-pro-2-7-custom-fonts-font-display-support/
 add_filter( 'elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
+
+// SEO no index search results
+function creame_noindex_search_results() {
+    if ( is_search() )  echo '<meta name="robots" content="noindex, follow">';
+}
+add_action('wp_head', 'creame_noindex_search_results');
+
+// Remove filter capital P dangit
+remove_filter( 'the_title', 'capital_P_dangit', 11 );
+remove_filter( 'the_content', 'capital_P_dangit', 11 );
+remove_filter( 'comment_text', 'capital_P_dangit', 31 );
 
 
 /**
