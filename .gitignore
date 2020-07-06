@@ -9,6 +9,9 @@ web/app/languages/*
 !web/app/languages/loco/
 web/app/cache/*
 
+# Parent theme
+web/app/themes/hello-elementor/
+
 # Plugins tracked
 #!web/app/plugins/plugin-name/
 
