@@ -25,5 +25,5 @@ Config::define('DISABLED_PLUGINS', serialize([
   'bunnycdn/bunnycdn.php',
   'cache-enabler/cache-enabler.php',
   'ithemes-security-pro/ithemes-security-pro.php',
-  'google-analytics-dashboard-for-wp/gadwp.php'
+  'ga-in/gainwp.php',
 ]));
