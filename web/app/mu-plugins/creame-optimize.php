@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.0.28
+Version:      1.3.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -50,6 +50,7 @@ function creame_custom_intervention_admin() {
     ]);
 
     // Remove Dashboard Items
+    // all, welcome, notices, activity, right-now, recent-comments, incoming-links, plugins, quick-draft, drafts, news
     intervention('remove-dashboard-items', [
         'welcome',
         'quick-draft',
@@ -85,13 +86,15 @@ function creame_custom_intervention_admin() {
     intervention('update-label-footer', $label);
 
     // Remove Page Components
+    // all, editor, author, thumbnail, page-attributes, custom-fields, comments
     intervention('remove-page-components', [
         'author',
-        'comments',
         'custom-fields',
+        'comments',
     ]);
 
     // Remove Post Components
+    // all, editor, author, excerpt, trackbacks, custom-fields, comments, slug, revisions, thumbnail
     intervention('remove-post-components', [
         // 'comments',
         'trackbacks',
@@ -99,12 +102,14 @@ function creame_custom_intervention_admin() {
     ]);
 
     // Remove unused user fields
+    // options, option-title, option-editor, option-schemes, option-shortcuts, option-toolbar,
+    // names, name-first, name-last, name-nickname, name-display,
+    // contact, contact-web, about, about-bio, about-profile
     intervention('remove-user-fields', [
         'option-title',
         'option-editor',
         'option-schemes',
         'option-shortcuts',
-        // 'option-toolbar',
         'contact',
         'contact-web',
         'about',
@@ -113,16 +118,18 @@ function creame_custom_intervention_admin() {
     ]);
 
     // Remove toolbar items for all
+    // logo, updates, site-name, comments, customize, new, new-post, new-page, new-media, new-user, account,
+    // account-user, account-profile, view, preview, archive
     intervention('remove-toolbar-items', [
         'logo',
         'comments',
         'customize',
-    ], ['all']);
+    ], 'all');
 
     // Remove toolbar items for non-admin users
     intervention('remove-toolbar-items', [
         'updates',
-    ], ['all-not-admin']);
+    ], 'all-not-admin');
 
     // Remove update notices from non-admin users
     intervention('remove-update-notices');
@@ -134,21 +141,32 @@ function creame_custom_intervention_admin() {
     ]);
 
     // Set default pagination at 50 (wp default 20)
-    intervention('update-pagination', 50);
+    // intervention('update-pagination', 50);
 
     // Remove Menu items
+    // all, danger-zone, dashboard, updates,
+    // posts, post-new, post-categories, post-tags,
+    // media, media-new,
+    // pages, page-new,
+    // comments,
+    // themes, theme-widgets, theme-menu, theme-editor,
+    // plugins, plugin-new, plugin-editor,
+    // users, user-new, user-profile,
+    // tools, tool-import, tool-export,
+    // settings, setting-writing, setting-reading, setting-media, setting-permalink, setting-discussion, setting-media, setting-disable-comments,
+    // acf, acf-new, acf-tools, acf-updates
     intervention('remove-menu-items', 'danger-zone', 'all-not-admin');
+
     intervention('remove-menu-items', [
         // 'posts',
         // 'comments',
-        // 'media',
-        // 'media-new',
         'theme-editor',
         'plugin-editor',
         'tool-import',
         'tool-export',
     ], 'all');
 
+    // Remove ACF Menu items on production
     if (defined('WP_ENV') && WP_ENV === 'production') {
         intervention('remove-menu-items', [
             'acf',
@@ -209,41 +227,26 @@ function creame_custom_avatar($avatar, $id_or_email, $size, $default, $alt) {
 }
 add_filter('get_avatar', 'creame_custom_avatar', 1, 5);
 
-// Admin menu posts default link to published
-function creame_filter_admin_published_default() {
-    global $submenu;
-
-    foreach ($submenu as $key => $item) {
-        if ($key == 'edit.php') {
-            $submenu[$key][5][2] = 'edit.php?post_status=publish';
-        } else if (strpos($key, 'edit.php?post_type=') === 0) {
-            $submenu[$key][5][2] = $key . '&post_status=publish';
-        }
-    }
-}
-// add_action('admin_menu', 'creame_filter_admin_published_default', 20);
-
 // Custom admin styles
 function creame_custom_admin_styles() {
 ?>
 <style>
-    /* Hide */
-    #wp-version-message,
-    .wcpdf-extensions-ad, /* WooCommerce PDF Invoices & Packing Slips */
-    .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
-    div[id^=gadwp-container-]>div:last-child, /* GADWP */
-    div[id^=gainwp-container-]>div:last-child, /* GAinWP */
-    #cache-settings .notice-info, /* Cache enabler */
-    #e-dashboard-overview .e-overview__feed /* Elementor dashboard widget */
-    { display:none !important; }
-    /* Bulk edit */
-    #bulk-titles, ul.cat-checklist { height:14rem; }
-    #wpbody-content .bulk-edit-row fieldset .inline-edit-group label { max-width:none; }
-    .inline-edit-row fieldset .timestamp-wrap, .inline-edit-row fieldset label span.input-text-wrap { margin-left:10em; }
-    .inline-edit-row fieldset label span.title, .inline-edit-row fieldset.inline-edit-date legend { min-width:9em; width:auto; margin-right:1em; }
-    /* Status colors */
-    tr.status-draft td, tr.status-draft th { background:rgba(243,238,195,0.5); }
-    tr.status-trash td, tr.status-trash th { background:rgba(205,108,118,0.2); }
+  /* Hide */
+  #wp-version-message,
+  .wcpdf-extensions-ad, /* WooCommerce PDF Invoices & Packing Slips */
+  .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
+  div[id^=gainwp-container-]>div:last-child, /* GAinWP */
+  #cache-settings .notice-info, /* Cache enabler */
+  #e-dashboard-overview .e-overview__feed /* Elementor dashboard widget */
+  { display:none !important; }
+  /* Bulk edit */
+  #bulk-titles, ul.cat-checklist { height:14rem; }
+  #wpbody-content .bulk-edit-row fieldset .inline-edit-group label { max-width:none; }
+  .inline-edit-row fieldset .timestamp-wrap, .inline-edit-row fieldset label span.input-text-wrap { margin-left:10em; }
+  .inline-edit-row fieldset label span.title, .inline-edit-row fieldset.inline-edit-date legend { min-width:9em; width:auto; margin-right:1em; }
+  /* Status colors */
+  tr.status-draft td, tr.status-draft th { background:rgba(243,238,195,0.5); }
+  tr.status-trash td, tr.status-trash th { background:rgba(205,108,118,0.2); }
 </style>
 <?php
 }
@@ -259,7 +262,7 @@ add_filter('xmlrpc_enabled', '__return_false', PHP_INT_MAX);
 add_filter('xmlrpc_methods', '__return_empty_array', PHP_INT_MAX);
 add_filter('xmlrpc_element_limit', function (): int { return 1; }, PHP_INT_MAX);
 
-// Hide other themes on Admin >> Appearance
+// Hide other themes on Admin > Appearance
 function creame_hide_themes($wp_themes){
     return array_intersect_key($wp_themes, [WP_DEFAULT_THEME => 1]);
 }
@@ -270,9 +273,12 @@ add_filter('cx_include_module_url', function($url, $path){
     return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
 }, 10, 2);
 
+// Remove JetPlugins admin menu
+add_action('admin_menu', function(){ remove_menu_page('jet-dashboard'); }, 100);
+
 // Disable WooCommerce 4 noise
 add_filter('woocommerce_helper_suppress_connect_notice', '__return_true');
-add_filter('woocommerce_marketing_menu_items', '__return_empty_array');
+add_filter('woocommerce_marketing_menu_items', '__return_empty_array');   // <  4.3
 
 
 /**
@@ -290,7 +296,7 @@ add_filter('post_mime_types', 'creame_post_mime_types');
 
 // Attachment unique slugs (pervent post conflicts)
 function creame_unique_attachment_slug($slug, $post_ID, $post_status, $post_type, $post_parent, $original_slug) {
-    return 'attachment' == $post_type ? uniqid('upload-') : $slug;
+    return 'attachment' == $post_type ? uniqid('media-') : $slug;
 }
 add_filter('wp_unique_post_slug', 'creame_unique_attachment_slug', 10, 6);
 
@@ -360,9 +366,7 @@ add_filter('revslider_meta_generator', '__return_false');
 
 // Remove plugin visual composer generator meta
 function creame_remove_visual_composer_generator_meta() {
-    if (class_exists('Vc_Base')) {
-        remove_action('wp_head', [visual_composer(), 'addMetaData']);
-    }
+    if (class_exists('Vc_Base')) remove_action('wp_head', [visual_composer(), 'addMetaData']);
 }
 add_action('init', 'creame_remove_visual_composer_generator_meta', 100);
 
@@ -387,9 +391,7 @@ function creame_register_jquery_from_cdn(){
     wp_register_script('jquery', 'https://code.jquery.com/jquery-' . $jquery_version . '.min.js', [], null, true);
 
     add_filter('wp_resource_hints', function ($urls, $relation_type) {
-        if ($relation_type === 'dns-prefetch') {
-            $urls[] = 'code.jquery.com';
-        }
+        if ($relation_type === 'dns-prefetch') $urls[] = 'code.jquery.com';
         return $urls;
     }, 10, 2);
 
@@ -428,10 +430,7 @@ add_filter('script_loader_tag', 'creame_clean_style_and_script_tags');
 
 // Remove hentry class on pages (fix error on google search console)
 function creame_remove_hentry_class($classes) {
-    if (!is_single()) {
-        $classes = array_diff($classes, ['hentry']);
-    }
-    return $classes;
+    return is_single() ? $classes : array_diff($classes, ['hentry']);
 }
 add_filter('post_class', 'creame_remove_hentry_class');
 
@@ -445,19 +444,37 @@ function creame_remove_only_admin_plugins ($plugins){
 }
 if(!is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
 
-// Elementor font-display https://developers.elementor.com/elementor-pro-2-7-custom-fonts-font-display-support/
-add_filter( 'elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
+// Add custom metas
+function creame_custom_metas() {
+    // SEO no index search results
+    if (is_search()) echo '<meta name="robots" content="noindex, follow">' . PHP_EOL;
 
-// SEO no index search results
-function creame_noindex_search_results() {
-    if ( is_search() )  echo '<meta name="robots" content="noindex, follow">';
+    // Add other metas...
 }
-add_action('wp_head', 'creame_noindex_search_results');
+add_action('wp_head', 'creame_custom_metas');
 
 // Remove filter capital P dangit
 remove_filter( 'the_title', 'capital_P_dangit', 11 );
 remove_filter( 'the_content', 'capital_P_dangit', 11 );
 remove_filter( 'comment_text', 'capital_P_dangit', 31 );
+
+
+/**
+ * ============================================================================
+ * Elementor
+ * ============================================================================
+ */
+
+// Elementor editor reduce widgets size
+add_action('elementor/editor/after_enqueue_styles', function(){
+    wp_add_inline_style('elementor-editor', '.elementor-panel .elementor-element { display:flex; } .elementor-panel .elementor-element .icon { padding:5px; }');
+});
+
+// Elementor disable data tracking
+add_filter( 'pre_option_elementor_allow_tracking', function(){ return 'no'; } );
+
+// Elementor font-display https://developers.elementor.com/elementor-pro-2-7-custom-fonts-font-display-support/
+add_filter( 'elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
 
 
 /**
@@ -468,12 +485,6 @@ remove_filter( 'comment_text', 'capital_P_dangit', 31 );
 
 // Remove image optimize notice
 add_filter('autoptimize_filter_main_imgopt_plug_notice', '__return_empty_string');
-
-// Autoptimize Google Fonts add font-display
-function creame_autoptimize_gfont_fontdisplay ($fonts) {
-    return $fonts . '&display=swap';
-}
-add_filter('autoptimize_filter_extra_gfont_fontstring', 'creame_autoptimize_gfont_fontdisplay');
 
 // Autoptimice use fonts CDN
 add_filter('autoptimize_filter_css_fonts_cdn', '__return_true');
@@ -494,11 +505,11 @@ add_action('init', 'creame_fix_bunnycdn_with_autoptimize', 20);
  * ============================================================================
  */
 
-// remove The SEO Framework annotations
+// Remove The SEO Framework annotations
 add_filter('the_seo_framework_indicator', '__return_false');
 add_filter('the_seo_framework_indicator_sitemap', '__return_false');
 
-// fix The SEO Framework auto description "en el"
+// Fix The SEO Framework auto description "en el"
 function creame_fix_generated_description($description) {
     return str_replace(' en el ' . get_bloginfo('name'), ' en ' . get_bloginfo('name'), $description);
 }
@@ -542,3 +553,40 @@ function custom_file_mod_allowed($allow, $context) {
     return 'download_language_pack_loco' === $context ? true : $allow;
 }
 add_filter('file_mod_allowed', 'custom_file_mod_allowed', 10, 2);
+
+
+/**
+ * ============================================================================
+ * Google Analytics selfhosted (avoid "leverage browser caching")
+ * ============================================================================
+ */
+
+// Update ga script (hooked on 'delete_expired_transients' daily CRON)
+function creame_ga_update_script() {
+    $cache_path = WP_CONTENT_DIR . '/cache/ga/';
+
+    if (wp_mkdir_p($cache_path)) {
+        $request = wp_safe_remote_get('https://www.google-analytics.com/analytics.js', ['timeout' => 10]);
+
+        if (!is_wp_error($request)) {
+            $ga_lm = strtotime(wp_remote_retrieve_header($request, 'last-modified'));
+
+            if ($ga_lm !== get_option('ga_last_modified')) {
+                file_put_contents($cache_path . $ga_lm . '.js' , wp_remote_retrieve_body($request));
+                update_option('ga_last_modified', $ga_lm);
+                do_action('ce_clear_cache'); // "Cache Enabler" clear caches
+            }
+        }
+    }
+}
+
+// Replace ga script with selfhosted (for GAinWP)
+function creame_ga_selfhosted_script($src) {
+    $ga_lm = get_option('ga_last_modified');
+    return $ga_lm ? content_url("/cache/ga/$ga_lm.js") : $src;
+}
+
+if (defined('WP_ENV') && WP_ENV === 'production') {
+    add_action('delete_expired_transients', 'creame_ga_update_script');
+    add_filter('gainwp_analytics_script_path', 'creame_ga_selfhosted_script');
+}
