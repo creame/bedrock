@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.3.0
+Version:      1.4.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -199,33 +199,30 @@ function creame_heartbeat_interval($settings) {
 }
 add_filter('heartbeat_settings', 'creame_heartbeat_interval');
 
-// Set Creame admin avatar
-function creame_custom_avatar($avatar, $id_or_email, $size, $default, $alt) {
+// Set Creame admin avatar url
+function creame_custom_avatar_url($url, $id_or_email, $args) {
+    if ($args['force_default'] || false === strpos($url, 'd9b60a057ee91a15dda1fa8b00d0692e')) return $url;
+
     $user = false;
+    if (is_numeric($id_or_email)) $user = get_user_by('id', absint($id_or_email));
+    elseif ( $id_or_email instanceof WP_User ) $user = $id_or_email;
+    elseif ( $id_or_email instanceof WP_Post ) $user = get_user_by('id', (int)$id_or_email->post_author);
+    elseif ( $id_or_email instanceof WP_Comment && !empty($id_or_email->user_id)) $user = get_user_by('id', (int)$id_or_email->user_id);
+    else $user = get_user_by('email', $id_or_email);
 
-    if (is_numeric($id_or_email)) {
-        $id = (int)$id_or_email;
-        $user = get_user_by('id', $id);
-    } elseif (is_object($id_or_email)) {
-        if (!empty($id_or_email->user_id)) {
-            $id = (int)$id_or_email->user_id;
-            $user = get_user_by('id', $id);
-        }
-    } else {
-        $user = get_user_by('email', $id_or_email);
-    }
-
-    if ($user && is_object($user)) {
-        if (preg_match('/(servicios|sistemas)(\+.*)?@crea\.me/i', $user->data->user_email)) {
-            $url = 'https://s.gravatar.com/avatar/' . md5('servicios@crea.me');
-            $avatar = "<img alt=\"$alt\" class=\"avatar avatar-$size photo\" height=\"$size\" width=\"$size\" ".
-                "src=\"$url?s=$size\" srcset=\"$url?s=$size 1x, $url?s=" . ($size * 2) . " 2x\" />";
-        }
-    }
-
-    return $avatar;
+    return $user && !is_wp_error($user) && preg_match('/(servicios|sistemas)(\+.*)?@crea\.me/i', $user->user_email) ?
+        'https://s.gravatar.com/avatar/' . md5('servicios@crea.me') . '?s=' . $args['size'] : $url;
 }
-add_filter('get_avatar', 'creame_custom_avatar', 1, 5);
+add_filter('get_avatar_url', 'creame_custom_avatar_url', 10, 3);
+
+// Add wp-env-environment body class
+function creame_body_env_class( $classes ) {
+    $class = defined('WP_ENV') ? 'wp-env-' . WP_ENV : 'wp-env-none';
+    return is_array($classes) ? array_merge($classes, [$class]) : "$classes $class";
+}
+add_filter('admin_body_class', 'creame_body_env_class' );
+add_filter('login_body_class', 'creame_body_env_class' );
+add_filter('body_class', 'creame_body_env_class' );
 
 // Custom admin styles
 function creame_custom_admin_styles() {
@@ -237,7 +234,8 @@ function creame_custom_admin_styles() {
   .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
   div[id^=gainwp-container-]>div:last-child, /* GAinWP */
   #cache-settings .notice-info, /* Cache enabler */
-  #e-dashboard-overview .e-overview__feed /* Elementor dashboard widget */
+  #e-dashboard-overview .e-overview__feed, /* Elementor dashboard widget */
+  .itsec-pro-label /* iThemes Security */
   { display:none !important; }
   /* Bulk edit */
   #bulk-titles, ul.cat-checklist { height:14rem; }
@@ -279,6 +277,12 @@ add_action('admin_menu', function(){ remove_menu_page('jet-dashboard'); }, 100);
 // Disable WooCommerce 4 noise
 add_filter('woocommerce_helper_suppress_connect_notice', '__return_true');
 add_filter('woocommerce_marketing_menu_items', '__return_empty_array');   // <  4.3
+
+// iThemes Security disable write wp-config.php
+add_filter('itsec_filter_can_write_to_files', '__return_false');
+
+// object-cache.php disable flush error
+add_filter('pecl_memcached/warn_on_flush', '__return_false');
 
 
 /**
@@ -442,7 +446,7 @@ function creame_remove_only_admin_plugins ($plugins){
         // add more project specific plugins
     ]);
 }
-if(!is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
+if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
 
 // Add custom metas
 function creame_custom_metas() {
@@ -482,6 +486,9 @@ add_filter( 'elementor_pro/custom_fonts/font_display', function(){ return 'swap'
  * Autoptimize
  * ============================================================================
  */
+
+// Fix '/wp/' for url replace
+define('AUTOPTIMIZE_WP_SITE_URL', WP_HOME);
 
 // Remove image optimize notice
 add_filter('autoptimize_filter_main_imgopt_plug_notice', '__return_empty_string');
@@ -590,3 +597,10 @@ if (defined('WP_ENV') && WP_ENV === 'production') {
     add_action('delete_expired_transients', 'creame_ga_update_script');
     add_filter('gainwp_analytics_script_path', 'creame_ga_selfhosted_script');
 }
+
+
+/**
+ * ============================================================================
+ * Custom project scripts
+ * ============================================================================
+ */
