@@ -28,7 +28,7 @@ $webroot_dir = preg_replace('/\/releases\/\d+\//', '/current/', $root_dir . '/we
 /**
  * Use Dotenv to set required environment variables and load .env file in root
  */
-$dotenv = Dotenv\Dotenv::createImmutable($root_dir);
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable($root_dir);
 if (file_exists($root_dir . '/.env')) {
     $dotenv->load();
     $dotenv->required(['WP_HOME', 'WP_SITEURL']);
