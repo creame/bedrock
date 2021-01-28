@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.4.0
+Version:      1.4.2
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -260,6 +260,9 @@ add_filter('xmlrpc_enabled', '__return_false', PHP_INT_MAX);
 add_filter('xmlrpc_methods', '__return_empty_array', PHP_INT_MAX);
 add_filter('xmlrpc_element_limit', function (): int { return 1; }, PHP_INT_MAX);
 
+// Disable post by email
+add_filter( 'enable_post_by_email_configuration', '__return_false' );
+
 // Hide other themes on Admin > Appearance
 function creame_hide_themes($wp_themes){
     return array_intersect_key($wp_themes, [WP_DEFAULT_THEME => 1]);
@@ -276,7 +279,6 @@ add_action('admin_menu', function(){ remove_menu_page('jet-dashboard'); }, 100);
 
 // Disable WooCommerce 4 noise
 add_filter('woocommerce_helper_suppress_connect_notice', '__return_true');
-add_filter('woocommerce_marketing_menu_items', '__return_empty_array');   // <  4.3
 
 // iThemes Security disable write wp-config.php
 add_filter('itsec_filter_can_write_to_files', '__return_false');
@@ -367,12 +369,6 @@ add_filter('show_recent_comments_widget_style', '__return_false');
 
 // Remove plugin revslider generator meta
 add_filter('revslider_meta_generator', '__return_false');
-
-// Remove plugin visual composer generator meta
-function creame_remove_visual_composer_generator_meta() {
-    if (class_exists('Vc_Base')) remove_action('wp_head', [visual_composer(), 'addMetaData']);
-}
-add_action('init', 'creame_remove_visual_composer_generator_meta', 100);
 
 // Remove CSS and JS query strings versions
 function creame_remove_cssjs_ver_filter($src){
@@ -579,7 +575,7 @@ function creame_ga_update_script() {
             $ga_lm = strtotime(wp_remote_retrieve_header($request, 'last-modified'));
 
             if ($ga_lm !== get_option('ga_last_modified')) {
-                file_put_contents($cache_path . $ga_lm . '.js' , wp_remote_retrieve_body($request));
+                file_put_contents($cache_path . $ga_lm . '/analytics.js' , wp_remote_retrieve_body($request));
                 update_option('ga_last_modified', $ga_lm);
                 do_action('ce_clear_cache'); // "Cache Enabler" clear caches
             }
@@ -590,7 +586,7 @@ function creame_ga_update_script() {
 // Replace ga script with selfhosted (for GAinWP)
 function creame_ga_selfhosted_script($src) {
     $ga_lm = get_option('ga_last_modified');
-    return $ga_lm ? content_url("/cache/ga/$ga_lm.js") : $src;
+    return $ga_lm ? content_url("/cache/ga/$ga_lm/analytics.js") : $src;
 }
 
 if (defined('WP_ENV') && WP_ENV === 'production') {
