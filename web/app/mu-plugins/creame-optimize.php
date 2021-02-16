@@ -566,7 +566,7 @@ add_filter('file_mod_allowed', 'custom_file_mod_allowed', 10, 2);
 
 // Update ga script (hooked on 'delete_expired_transients' daily CRON)
 function creame_ga_update_script() {
-    $cache_path = WP_CONTENT_DIR . '/cache/ga/';
+    $cache_path = WP_CONTENT_DIR . '/cache/ga';
 
     if (wp_mkdir_p($cache_path)) {
         $request = wp_safe_remote_get('https://www.google-analytics.com/analytics.js', ['timeout' => 10]);
@@ -575,7 +575,7 @@ function creame_ga_update_script() {
             $ga_lm = strtotime(wp_remote_retrieve_header($request, 'last-modified'));
 
             if ($ga_lm !== get_option('ga_last_modified')) {
-                file_put_contents($cache_path . $ga_lm . '/analytics.js' , wp_remote_retrieve_body($request));
+                file_put_contents("$cache_path/$ga_lm.js" , wp_remote_retrieve_body($request));
                 update_option('ga_last_modified', $ga_lm);
                 do_action('ce_clear_cache'); // "Cache Enabler" clear caches
             }
@@ -586,7 +586,7 @@ function creame_ga_update_script() {
 // Replace ga script with selfhosted (for GAinWP)
 function creame_ga_selfhosted_script($src) {
     $ga_lm = get_option('ga_last_modified');
-    return $ga_lm ? content_url("/cache/ga/$ga_lm/analytics.js") : $src;
+    return $ga_lm ? content_url("/cache/ga/$ga_lm.js") : $src;
 }
 
 if (defined('WP_ENV') && WP_ENV === 'production') {
