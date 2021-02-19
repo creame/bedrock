@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.4.2
+Version:      1.4.3
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -434,15 +434,14 @@ function creame_remove_hentry_class($classes) {
 }
 add_filter('post_class', 'creame_remove_hentry_class');
 
-// Conditional plugin load. Exclude in front plugins for admin only
-function creame_remove_only_admin_plugins ($plugins){
+// Conditional plugin load
+function creame_conditional_plugins ($plugins){
     return array_diff($plugins, [
-        'classic-editor/classic-editor.php',
         'duplicate-post/duplicate-post.php',
-        // add more project specific plugins
+        // Add project specific plugins...
     ]);
 }
-if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
+if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_conditional_plugins', 1);
 
 // Add custom metas
 function creame_custom_metas() {
