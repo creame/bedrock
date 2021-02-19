@@ -51,6 +51,7 @@
     "wpackagist-plugin/cache-enabler": "^1.6",
     "wpackagist-plugin/duplicate-post": "^4.1",
     "wpackagist-plugin/elementor": "^3.1",
+    "wpackagist-plugin/filebird": "^4.5",
     "wpackagist-plugin/ga-in": "^5.4",
     "wpackagist-plugin/redirection": "^5.0",
     "wpackagist-theme/hello-elementor": "^2.3"
