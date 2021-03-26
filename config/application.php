@@ -123,6 +123,7 @@ Config::define('WPLANG', 'es_ES');
 Config::define('WP_POST_REVISIONS', 5);
 Config::define('WP_MEMORY_LIMIT', '256M');
 Config::define('WP_CACHE', true);
+Config::define('WP_CACHE_KEY_SALT', 'example');
 Config::define('CREAME_SUPPORT_EMAIL', 'i@crea.me');
 // Main Theme (disable Wordpress core themes twenty...)
 // Config::define('WP_DEFAULT_THEME', 'my-theme');
