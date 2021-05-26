@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.4.3
+Version:      1.5.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -245,6 +245,7 @@ function creame_custom_admin_styles() {
   /* Status colors */
   tr.status-draft td, tr.status-draft th { background:rgba(243,238,195,0.5); }
   tr.status-trash td, tr.status-trash th { background:rgba(205,108,118,0.2); }
+  .wp-list-table i.eicon-elementor-square { color:#940040; }
 </style>
 <?php
 }
@@ -261,7 +262,7 @@ add_filter('xmlrpc_methods', '__return_empty_array', PHP_INT_MAX);
 add_filter('xmlrpc_element_limit', function (): int { return 1; }, PHP_INT_MAX);
 
 // Disable post by email
-add_filter( 'enable_post_by_email_configuration', '__return_false' );
+add_filter('enable_post_by_email_configuration', '__return_false');
 
 // Hide other themes on Admin > Appearance
 function creame_hide_themes($wp_themes){
@@ -277,11 +278,17 @@ add_filter('cx_include_module_url', function($url, $path){
 // Remove JetPlugins admin menu
 add_action('admin_menu', function(){ remove_menu_page('jet-dashboard'); }, 100);
 
-// Disable WooCommerce 4 noise
-add_filter('woocommerce_helper_suppress_connect_notice', '__return_true');
-
 // iThemes Security disable write wp-config.php
 add_filter('itsec_filter_can_write_to_files', '__return_false');
+
+// iThemes Security fix it_icon_font_admin_enueue_scripts()
+function fix_admin_ithemes_icon_font() {
+    if (wp_style_is('ithemes-icon-font')) {
+        wp_deregister_style('ithemes-icon-font');
+        wp_enqueue_style('ithemes-icon-font', plugin_dir_url('ithemes-security-pro/lib/icon-fonts/.').'icon-fonts.css');
+    }
+}
+add_action('admin_enqueue_scripts', 'fix_admin_ithemes_icon_font', 11);
 
 // object-cache.php disable flush error
 add_filter('pecl_memcached/warn_on_flush', '__return_false');
@@ -300,7 +307,7 @@ function creame_post_mime_types($post_mime_types) {
 }
 add_filter('post_mime_types', 'creame_post_mime_types');
 
-// Attachment unique slugs (pervent post conflicts)
+// Attachment unique slugs (prevent post conflicts)
 function creame_unique_attachment_slug($slug, $post_ID, $post_status, $post_type, $post_parent, $original_slug) {
     return 'attachment' == $post_type ? uniqid('media-') : $slug;
 }
@@ -372,10 +379,16 @@ add_filter('revslider_meta_generator', '__return_false');
 
 // Remove CSS and JS query strings versions
 function creame_remove_cssjs_ver_filter($src){
-    return strpos($src, '?ver=') ? remove_query_arg('ver', $src) : $src;
+    return strpos($src, 'ver=') ? remove_query_arg('ver', $src) : $src;
 }
-add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter', 10, 2);
-add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter', 10, 2);
+add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter', 10);
+add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter', 10);
+
+// Google Fonts add "font-display:swap"
+function creame_google_fonts_swap($src){
+    return strpos($src, 'fonts.googleapis.com') && !strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
+}
+add_filter('style_loader_src', 'creame_google_fonts_swap', 10);
 
 // Remove jQuery migrate
 function creame_remove_jquery_migrate($scripts) {
@@ -434,14 +447,16 @@ function creame_remove_hentry_class($classes) {
 }
 add_filter('post_class', 'creame_remove_hentry_class');
 
-// Conditional plugin load
-function creame_conditional_plugins ($plugins){
+// Conditional plugin load. Exclude in front plugins for admin only
+function creame_remove_only_admin_plugins ($plugins){
     return array_diff($plugins, [
+        'classic-editor/classic-editor.php',
         'duplicate-post/duplicate-post.php',
-        // Add project specific plugins...
+        'filebird/filebird.php',
+        // add more project specific plugins
     ]);
 }
-if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_conditional_plugins', 1);
+if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
 
 // Add custom metas
 function creame_custom_metas() {
@@ -453,9 +468,37 @@ function creame_custom_metas() {
 add_action('wp_head', 'creame_custom_metas');
 
 // Remove filter capital P dangit
-remove_filter( 'the_title', 'capital_P_dangit', 11 );
-remove_filter( 'the_content', 'capital_P_dangit', 11 );
-remove_filter( 'comment_text', 'capital_P_dangit', 31 );
+remove_filter('the_title', 'capital_P_dangit', 11);
+remove_filter('the_content', 'capital_P_dangit', 11);
+remove_filter('comment_text', 'capital_P_dangit', 31);
+
+// Embed YouTube cookieless
+function creame_embed_youtube_nocookie($output) {
+    return str_replace('https://www.youtube.com/', 'https://www.youtube-nocookie.com/', $output);
+}
+add_filter('embed_oembed_html', 'creame_embed_youtube_nocookie', 10);
+
+
+/**
+ * ============================================================================
+ * WooCommerce
+ * ============================================================================
+ */
+
+// Disable WooCommerce admin
+// add_filter('woocommerce_admin_disabled', '__return_true');
+
+// Disable extension suggestions
+add_filter('woocommerce_allow_marketplace_suggestions', '__return_false', 999);
+
+// Disable connect to woocommerce.com notice
+add_filter('woocommerce_helper_suppress_admin_notices', '__return_true');
+
+// Disable extensions menu
+function creame_remove_admin_addon_submenu() {
+    remove_submenu_page('woocommerce', 'wc-addons');
+}
+add_action('admin_menu', 'creame_remove_admin_addon_submenu', 999);
 
 
 /**
@@ -470,11 +513,20 @@ add_action('elementor/editor/after_enqueue_styles', function(){
 });
 
 // Elementor disable data tracking
-add_filter( 'pre_option_elementor_allow_tracking', function(){ return 'no'; } );
+add_filter('pre_option_elementor_allow_tracking', function(){ return 'no'; });
 
 // Elementor font-display https://developers.elementor.com/elementor-pro-2-7-custom-fonts-font-display-support/
-add_filter( 'elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
+add_filter('elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
 
+// Elementor post status icon
+function creame_elementor_post_state_icon($states) {
+    if (isset($states['elementor'])) {
+        unset($states['elementor']);
+        return ['elementor' => '<i class="eicon-elementor-square" title="Elementor"></i>'] + $states;
+    }
+    return $states;
+}
+add_filter('display_post_states', 'creame_elementor_post_state_icon', 100);
 
 /**
  * ============================================================================
