@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.5.0
+Version:      1.6.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -261,6 +261,10 @@ add_filter('xmlrpc_enabled', '__return_false', PHP_INT_MAX);
 add_filter('xmlrpc_methods', '__return_empty_array', PHP_INT_MAX);
 add_filter('xmlrpc_element_limit', function (): int { return 1; }, PHP_INT_MAX);
 
+// Disable REST-API
+// add_filter('json_enabled', '__return_false');
+// add_filter('json_jsonp_enabled', '__return_false');
+
 // Disable post by email
 add_filter('enable_post_by_email_configuration', '__return_false');
 
@@ -269,6 +273,9 @@ function creame_hide_themes($wp_themes){
     return array_intersect_key($wp_themes, [WP_DEFAULT_THEME => 1]);
 }
 if (defined('WP_DEFAULT_THEME')) add_filter('wp_prepare_themes_for_js', 'creame_hide_themes');
+
+// Remove language selector on wp-admin login (WP 5.9)
+add_filter('login_display_language_dropdown', '__return_false');
 
 // Fix JetEngine assets path
 add_filter('cx_include_module_url', function($url, $path){
@@ -313,6 +320,24 @@ function creame_unique_attachment_slug($slug, $post_ID, $post_status, $post_type
 }
 add_filter('wp_unique_post_slug', 'creame_unique_attachment_slug', 10, 6);
 
+// Auto sanitize attachment title & alt text
+function creame_attachment_title($post_ID) {
+    $post  = get_post($post_ID);
+    $title = preg_replace('%\s*[-_\s]+\s*%', ' ', $post->post_title);
+    // $title = ucwords(strtolower($title)); // Title Case
+
+    // Set image alt text
+    if (wp_attachment_is_image($post_ID)) update_post_meta($post_ID, '_wp_attachment_image_alt', $title);
+
+    wp_update_post([
+        'ID'           => $post_ID,
+        'post_title'   => $title, // Set attachment title
+        // 'post_excerpt' => $title, // Set attachment caption (Excerpt)
+        // 'post_content' => $title, // Set attachment description (Content)
+    ]);
+}
+add_action('add_attachment', 'creame_attachment_title');
+
 // Redirect attachment page to attachment file
 function creame_attachment_redirect(){
     if (is_attachment()) wp_redirect(wp_get_attachment_url(), 301);
@@ -325,57 +350,30 @@ add_action('template_redirect', 'creame_attachment_redirect');
  * WP Head clean up
  * ============================================================================
  */
+function creame_clean_header() {
+    remove_action('wp_head', 'wp_generator'); // Remove wordpress version
+    remove_action('wp_head', 'wlwmanifest_link'); // Remove wlwmanifest.xml (needed to support windows live writer)
+    remove_action('wp_head', 'rsd_link'); // Remove really simple discovery link
+    remove_action('wp_head', 'feed_links_extra', 3); // Remove all extra rss feed links
+    remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0); // Remove shortlink
+    remove_action('wp_head', 'wp_oembed_add_discovery_links'); // Remove oembed links
+    remove_action('wp_head', 'start_post_rel_link'); // Remove rel links
+    remove_action('wp_head', 'index_rel_link');
+    remove_action('wp_head', 'parent_post_rel_link');
+    remove_action('wp_head', 'adjacent_posts_rel_link');
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+    remove_action('wp_head', 'rest_output_link_wp_head'); // Remove REST-API link
+    remove_action('set_comment_cookies', 'wp_set_comment_cookies'); // Remove commments cookies
+    remove_action('template_redirect', 'wp_shortlink_header', 11, 0); // Remove HTTP headers
+    remove_action('template_redirect', 'rest_output_link_header', 11, 0);
 
-// Remove wordpress version
-remove_action('wp_head', 'wp_generator');
-
-// Remove wlwmanifest.xml (needed to support windows live writer)
-remove_action('wp_head', 'wlwmanifest_link');
-
-// Remove really simple discovery link
-remove_action('wp_head', 'rsd_link');
-
-// Remove all extra rss feed links
-remove_action('wp_head', 'feed_links_extra', 3);
-
-// Remove shortlink
-remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
-
-// Remove oembed links
-remove_action('wp_head', 'wp_oembed_add_discovery_links');
-// remove_action('wp_head', 'wp_oembed_add_host_js'); // emded.js
-
-// Remove rel links
-remove_action('wp_head', 'start_post_rel_link');
-remove_action('wp_head', 'index_rel_link');
-remove_action('wp_head', 'parent_post_rel_link');
-remove_action('wp_head', 'adjacent_posts_rel_link');
-remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
-
-// Remove REST-API link
-remove_action('wp_head', 'rest_output_link_wp_head');
-
-// Disable REST-API
-// add_filter('json_enabled', '__return_false');
-// add_filter('json_jsonp_enabled', '__return_false');
-
-// Remove commments cookies
-remove_action('set_comment_cookies', 'wp_set_comment_cookies');
-
-// Removes the generator name from the RSS feeds
-add_filter('the_generator', '__return_false');
-
-// Remove gallery inline styles
-add_filter('use_default_gallery_style', '__return_false');
-
-// Remove comments feed link
-add_filter('feed_links_show_comments_feed', '__return_false');
-
-// Remove recent comments widget styles
-add_filter('show_recent_comments_widget_style', '__return_false');
-
-// Remove plugin revslider generator meta
-add_filter('revslider_meta_generator', '__return_false');
+    add_filter('the_generator', '__return_false'); // Removes the generator name from the RSS feeds
+    add_filter('use_default_gallery_style', '__return_false'); // Remove gallery inline styles
+    add_filter('feed_links_show_comments_feed', '__return_false'); // Remove comments feed link
+    add_filter('show_recent_comments_widget_style', '__return_false'); // Remove recent comments widget styles
+    add_filter('revslider_meta_generator', '__return_false'); // Remove plugin revslider generator meta
+}
+add_action('after_setup_theme', 'creame_clean_header');
 
 // Remove CSS and JS query strings versions
 function creame_remove_cssjs_ver_filter($src){
@@ -396,26 +394,16 @@ function creame_remove_jquery_migrate($scripts) {
 }
 add_action('wp_default_scripts', 'creame_remove_jquery_migrate');
 
-// Load jQuery from jQuery's CDN with a local fallback
-function creame_register_jquery_from_cdn(){
-    $jquery_version = str_replace('-wp', '', wp_scripts()->registered['jquery']->ver);
-
-    wp_deregister_script('jquery');
-    wp_register_script('jquery', 'https://code.jquery.com/jquery-' . $jquery_version . '.min.js', [], null, true);
-
-    add_filter('wp_resource_hints', function ($urls, $relation_type) {
-        if ($relation_type === 'dns-prefetch') $urls[] = 'code.jquery.com';
-        return $urls;
-    }, 10, 2);
-
-    $jquery_fallback_src = apply_filters('script_loader_src', includes_url('/js/jquery/jquery.js'), 'jquery-fallback');
-    // Use "<scri"+"pt to avoid Elementor rocket_loader_filter
-    wp_add_inline_script('jquery', 'window.jQuery || document.write("<scri"+"pt src=\"' . $jquery_fallback_src . '\"><\/script>");');
+// jQuery Shim: script for <header> to capture "jQuery" calls in html body.
+// Require call "shimJQ()" after jQuery is loaded to run captured functions.
+function creame_jquery_shim() {
+    echo '<script>!function(n,t){var i,f,u=[],o={};n[t]||(i=o.ready=function(n){u.push(n)},f=n[t]=function(n){return"function"==typeof n&&i(n),o},n.shimJQ=function(){if(n[t]!==f)for(;u.length;)n[t](u.shift())})}(window,"jQuery");</script>';
 }
-add_action('wp_enqueue_scripts', 'creame_register_jquery_from_cdn', 100);
 
 // Move scripts to footer
 function creame_move_scripts_to_footer() {
+    if (isset($_GET['elementor-preview'])) return;
+
     remove_action('wp_head', 'wp_print_scripts');
     remove_action('wp_head', 'wp_print_head_scripts', 9);
     remove_action('wp_head', 'wp_enqueue_scripts', 1);
@@ -423,8 +411,14 @@ function creame_move_scripts_to_footer() {
     add_action('wp_footer', 'wp_print_scripts', 5);
     add_action('wp_footer', 'wp_enqueue_scripts', 5);
     add_action('wp_footer', 'wp_print_head_scripts', 5);
+
+    // Add jQuery Shim
+    if (wp_script_is('jquery-core')){
+        add_action('wp_head', 'creame_jquery_shim');
+        wp_add_inline_script('jquery-core', 'shimJQ()');
+    }
 }
-// add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer');
+add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer', 11);
 
 // Clean enqueued style and script tags
 function creame_clean_style_and_script_tags($tag) {
@@ -452,20 +446,16 @@ function creame_remove_only_admin_plugins ($plugins){
     return array_diff($plugins, [
         'classic-editor/classic-editor.php',
         'duplicate-post/duplicate-post.php',
-        'filebird/filebird.php',
         // add more project specific plugins
     ]);
 }
 if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
 
-// Add custom metas
-function creame_custom_metas() {
-    // SEO no index search results
+// SEO no index search results
+function creame_noindex_search() {
     if (is_search()) echo '<meta name="robots" content="noindex, follow">' . PHP_EOL;
-
-    // Add other metas...
 }
-add_action('wp_head', 'creame_custom_metas');
+add_action('wp_head', 'creame_noindex_search');
 
 // Remove filter capital P dangit
 remove_filter('the_title', 'capital_P_dangit', 11);
@@ -477,6 +467,20 @@ function creame_embed_youtube_nocookie($output) {
     return str_replace('https://www.youtube.com/', 'https://www.youtube-nocookie.com/', $output);
 }
 add_filter('embed_oembed_html', 'creame_embed_youtube_nocookie', 10);
+
+// Remove emded.js (WP < 5.9)
+// remove_action('wp_head', 'wp_oembed_add_host_js');
+
+// Remove WP 5.9 global styles if not use Full Site Edit
+remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
+remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+
+// Remove WP 5.9 SVG duotuone filters
+remove_action('wp_body_open', 'wp_global_styles_render_svg_filters');
+remove_action('in_admin_header', 'wp_global_styles_render_svg_filters');
+
+// Only load blocks assets for current page
+add_filter('should_load_separate_core_block_assets', '__return_true');
 
 
 /**
@@ -500,12 +504,30 @@ function creame_remove_admin_addon_submenu() {
 }
 add_action('admin_menu', 'creame_remove_admin_addon_submenu', 999);
 
+// Sync first name between WP <=> Woo users
+function creame_sync_first_name_wp_woo( $first_name ) {
+    return $_POST['billing_first_name'] ?? $first_name;
+}
+add_filter( 'pre_user_first_name', 'creame_sync_first_name_wp_woo' );
+
+// Sync last name between WP <=> Woo users
+function creame_sync_last_name_wp_woo( $last_name ) {
+    return $_POST['billing_last_name'] ?? $last_name;
+}
+add_filter( 'pre_user_last_name', 'creame_sync_last_name_wp_woo' );
+
 
 /**
  * ============================================================================
  * Elementor
  * ============================================================================
  */
+
+// Elementor dashboard widget disable
+function creame_disable_elementor_dashboard_overview_widget() {
+    remove_meta_box('e-dashboard-overview', 'dashboard', 'normal');
+}
+add_action('wp_dashboard_setup', 'creame_disable_elementor_dashboard_overview_widget', 40);
 
 // Elementor editor reduce widgets size
 add_action('elementor/editor/after_enqueue_styles', function(){
