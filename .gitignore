@@ -12,7 +12,6 @@ web/app/languages/*
 !web/app/languages/loco/
 !web/app/languages/plugins/
 web/app/languages/plugins/*
-!web/app/languages/plugins/elementor-pro-*
 !web/app/languages/plugins/it-l10n-ithemes-security-pro-*
 
 # Parent theme
