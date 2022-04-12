@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40299b3dcf7c5f5d0f810bf65675c9e6",
+    "content-hash": "80ebefb824d98e9d631514a1e5dd0e66",
     "packages": [
         {
             "name": "composer/installers",
@@ -1128,6 +1128,24 @@
             "time": "2021-12-12T23:22:04+00:00"
         },
         {
+            "name": "wpackagist-plugin/analytics-insights",
+            "version": "5.5.6",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/analytics-insights/",
+                "reference": "tags/5.5.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/analytics-insights.5.5.6.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/analytics-insights/"
+        },
+        {
             "name": "wpackagist-plugin/autodescription",
             "version": "4.2.3",
             "source": {
@@ -1234,24 +1252,6 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/filebird/"
-        },
-        {
-            "name": "wpackagist-plugin/ga-in",
-            "version": "5.4.6",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/ga-in/",
-                "reference": "tags/5.4.6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/ga-in.5.4.6.zip"
-            },
-            "require": {
-                "composer/installers": "^1.0 || ^2.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/ga-in/"
         },
         {
             "name": "wpackagist-plugin/redirection",

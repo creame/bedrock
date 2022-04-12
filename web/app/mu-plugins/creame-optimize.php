@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.6.0
+Version:      1.6.1
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -232,7 +232,7 @@ function creame_custom_admin_styles() {
   #wp-version-message,
   .wcpdf-extensions-ad, /* WooCommerce PDF Invoices & Packing Slips */
   .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
-  div[id^=gainwp-container-]>div:last-child, /* GAinWP */
+  #aiwp-container-1>div:last-child, /* Analytics Insights */
   #cache-settings .notice-info, /* Cache enabler */
   #e-dashboard-overview .e-overview__feed, /* Elementor dashboard widget */
   .itsec-pro-label /* iThemes Security */
