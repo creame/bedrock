@@ -51,9 +51,9 @@
     "wpackagist-plugin/autodescription": "^4.2",
     "wpackagist-plugin/autoptimize": "^3.0",
     "wpackagist-plugin/cache-enabler": "^1.8",
-    "wpackagist-plugin/duplicate-post": "^4.4",
+    "wpackagist-plugin/duplicate-post": "^4.5",
     "wpackagist-plugin/elementor": "^3.6",
-    "wpackagist-plugin/filebird": "^4.9",
+    "wpackagist-plugin/filebird": "^5.0",
     "wpackagist-plugin/redirection": "^5.2",
     "wpackagist-theme/hello-elementor": "^2.5"
   },
