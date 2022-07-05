@@ -44,6 +44,7 @@
     "roots/wordpress": "6.0.*",
     "roots/wp-config": "1.0.0",
     "roots/wp-password-bcrypt": "1.1.0",
+    "soberwp/intervention": "dev-main",
     "vendor/elementor-pro": "^3.7",
     "vendor/ithemes-security-pro": "^7.1",
     "vlucas/phpdotenv": "^5.4",
@@ -74,10 +75,7 @@
   "prefer-stable": true,
   "extra": {
     "installer-paths": {
-      "web/app/mu-plugins/{$name}/": [
-        "type:wordpress-muplugin",
-        "soberwp/intervention"
-      ],
+      "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
       "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
       "web/app/themes/{$name}/": ["type:wordpress-theme"]
     },
