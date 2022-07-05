@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adb7a249eee9034e000c3ebd3712de09",
+    "content-hash": "4b4a397391f1abe7c902a7ed6ef5286c",
     "packages": [
         {
             "name": "composer/installers",
@@ -1286,7 +1286,7 @@
         },
         {
             "name": "wpackagist-plugin/filebird",
-            "version": "5.0",
+            "version": "5.0.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/filebird/",
@@ -1294,7 +1294,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/filebird.zip?timestamp=1656576843"
+                "url": "https://downloads.wordpress.org/plugin/filebird.zip?timestamp=1656986308"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
