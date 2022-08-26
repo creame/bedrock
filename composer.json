@@ -50,13 +50,13 @@
     "vlucas/phpdotenv": "^5.4",
     "wpackagist-plugin/analytics-insights": "^5.7",
     "wpackagist-plugin/autodescription": "^4.2",
-    "wpackagist-plugin/autoptimize": "^3.0",
+    "wpackagist-plugin/autoptimize": "^3.1",
     "wpackagist-plugin/cache-enabler": "^1.8",
     "wpackagist-plugin/duplicate-post": "^4.5",
-    "wpackagist-plugin/elementor": "^3.6",
+    "wpackagist-plugin/elementor": "^3.7",
     "wpackagist-plugin/filebird": "^5.0",
-    "wpackagist-plugin/redirection": "^5.2",
-    "wpackagist-theme/hello-elementor": "^2.5"
+    "wpackagist-plugin/redirection": "^5.3",
+    "wpackagist-theme/hello-elementor": "^2.6"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.6.2",
@@ -68,7 +68,8 @@
     "sort-packages": true,
     "allow-plugins": {
       "composer/installers": true,
-      "roots/wordpress-core-installer": true
+      "roots/wordpress-core-installer": true,
+      "mindtwo/wplang": true
     }
   },
   "minimum-stability": "dev",
