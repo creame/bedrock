@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.6.1
+Version:      1.6.2
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -378,16 +378,18 @@ add_action('after_setup_theme', 'creame_clean_header');
 
 // Remove CSS and JS query strings versions
 function creame_remove_cssjs_ver_filter($src){
-    return strpos($src, 'ver=') ? remove_query_arg('ver', $src) : $src;
+    return is_admin() ? $src : remove_query_arg('ver', $src);
 }
 add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter', 10);
 add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter', 10);
 
-// Google Fonts add "font-display:swap"
-function creame_google_fonts_swap($src){
-    return strpos($src, 'fonts.googleapis.com') && !strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
+// Google Fonts replace with Bunny Fonts (GDPR compliant) & add "font-display:swap"
+function creame_google_fonts($src){
+    if (false === strpos($src, 'fonts.googleapis.com')) return $src;
+    $src = str_replace('fonts.googleapis.com', 'fonts.bunny.net', $src);
+    return false !== strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
 }
-add_filter('style_loader_src', 'creame_google_fonts_swap', 10);
+add_filter('style_loader_src', 'creame_google_fonts', 100);
 
 // Remove jQuery migrate
 function creame_remove_jquery_migrate($scripts) {
