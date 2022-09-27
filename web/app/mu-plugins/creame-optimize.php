@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.6.2
+Version:      1.6.3
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -283,8 +283,16 @@ add_filter('cx_include_module_url', function($url, $path){
     return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
 }, 10, 2);
 
-// Remove JetPlugins admin menu
-add_action('admin_menu', function(){ remove_menu_page('jet-dashboard'); }, 100);
+// Fix CMB2 assets url
+add_filter('cmb2_meta_box_url', function($url){
+    return preg_replace('/^.*\/releases\/\d+\/web\//', trailingslashit(WP_HOME), $url);
+});
+
+// Remove admin menus
+add_action('admin_menu', function(){
+    remove_menu_page('jet-dashboard'); // JetPlugins
+    remove_menu_page('filebird-settings'); // Filebird
+}, 100);
 
 // iThemes Security disable write wp-config.php
 add_filter('itsec_filter_can_write_to_files', '__return_false');
@@ -380,13 +388,13 @@ add_action('after_setup_theme', 'creame_clean_header');
 function creame_remove_cssjs_ver_filter($src){
     return is_admin() ? $src : remove_query_arg('ver', $src);
 }
-add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter', 10);
-add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter', 10);
+add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter');
+add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter');
 
 // Google Fonts replace with Bunny Fonts (GDPR compliant) & add "font-display:swap"
 function creame_google_fonts($src){
     if (false === strpos($src, 'fonts.googleapis.com')) return $src;
-    $src = str_replace('fonts.googleapis.com', 'fonts.bunny.net', $src);
+    $src = str_replace('fonts.googleapis.com/css', 'fonts.bunny.net/css', $src);
     return false !== strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
 }
 add_filter('style_loader_src', 'creame_google_fonts', 100);
@@ -518,6 +526,14 @@ function creame_sync_last_name_wp_woo( $last_name ) {
     return $_POST['billing_last_name'] ?? $last_name;
 }
 add_filter( 'pre_user_last_name', 'creame_sync_last_name_wp_woo' );
+
+function creame_fix_resource_hints( $urls, $relation_type ) {
+    if (!in_array($relation_type, ['prefetch', 'prerender'], true)) return $urls;
+    $abspath = untrailingslashit(get_option('siteurl')).'/wp-includes/';
+    foreach ($urls as &$url) $url['href'] = preg_replace('/^\/wp-includes\//', $abspath, $url['href']);
+    return $urls;
+}
+add_filter('wp_resource_hints', 'creame_fix_resource_hints', 20, 2);
 
 
 /**
