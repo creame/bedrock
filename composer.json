@@ -27,7 +27,10 @@
     {
       "type": "composer",
       "url": "https://wpackagist.org",
-      "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
     },
     {
       "type": "composer",
@@ -82,7 +85,7 @@
     },
     "wordpress-install-dir": "web/wp",
     "wordpress-language-dir": "web/app/languages",
-    "wordpress-languages": [ "es_ES" ]
+    "wordpress-languages": ["es_ES"]
   },
   "scripts": {
     "post-root-package-install": [
