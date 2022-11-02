@@ -124,7 +124,6 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 /**
  * Creame Settings
  */
-Config::define('WPLANG', 'es_ES');
 Config::define('WP_MEMORY_LIMIT', '256M');
 Config::define('WP_CACHE', true);
 Config::define('WP_CACHE_KEY_SALT', 'example');
