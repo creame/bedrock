@@ -1264,7 +1264,7 @@ class WP_Object_Cache {
 	 * @return  bool                Returns TRUE on success or FALSE on failure.
 	 */
 	public function flush( $delay = 0 ) {
-		$result = $this->m->flush( $delay );
+		$result = $this->m->flush( intval( $delay ) );
 
 		// Only reset the runtime cache if memcached was properly flushed
 		if ( Memcached::RES_SUCCESS === $this->getResultCode() )
