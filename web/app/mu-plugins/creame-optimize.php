@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      1.6.3
+Version:      2.0.4
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -13,172 +13,8 @@ License:      MIT License
 /**
  * ============================================================================
  * WP Admin clean up
- * Needs intervention (https://github.com/soberwp/intervention)
  * ============================================================================
  */
-
-use function \Sober\Intervention\intervention;
-
-if (function_exists('Sober\Intervention\intervention')) {
-    // Front/Admin customizations
-    add_action('init', 'creame_custom_intervention', 1);
-    add_action('admin_init', 'creame_custom_intervention_admin', 1);
-}
-
-function creame_custom_intervention() {
-    // Remove frontend toolbar
-    // intervention('remove-toolbar-frontend');
-
-    // Remove Emoji
-    intervention('remove-emoji');
-}
-
-function creame_custom_intervention_admin() {
-    // Add Welcome Dashboard
-    // intervention('add-dashboard-item', [
-    //     'Welcome',
-    //     'Welcome to '.get_bloginfo('name')
-    // ]);
-
-    // Remove Emoji
-    intervention('remove-emoji');
-
-    // Add SVG Support
-    intervention('add-svg-support', [
-        'admin',
-        'editor',
-    ]);
-
-    // Remove Dashboard Items
-    // all, welcome, notices, activity, right-now, recent-comments, incoming-links, plugins, quick-draft, drafts, news
-    intervention('remove-dashboard-items', [
-        'welcome',
-        'quick-draft',
-        'news',
-    ]);
-
-    // Remove Howdy
-    intervention('remove-howdy', '');
-
-    // Update label footer
-    $email = defined('CREAME_SUPPORT_EMAIL') ? CREAME_SUPPORT_EMAIL : 'i@crea.me';
-    $label = '<em><strong>Wordpress</strong> optimizado por <strong><a href="https://crea.me" style="' .
-        'background:url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAB7FB' .
-        'MVEUAAAAAi00Uak1LTk1MTU1NTU1PTE1bRk1dSE1yOk1zOU17NU3YBk3aBU3bBU3hAU3uAE3/AE1NTU1TSk3YBk1MT' .
-        'U1NTU2JLk2SKk3YBk1NTU2lIE3YBk3bBU1MTU1NTU1RS02YJ03XB03YBk2uG02nH03/AE3ZBk1NTU1IUE1NTU3YBk1' .
-        'MTk1NTU3WB03YBk1KTk3YBk3YBk3YBk0AeE3YBk3YBk1gQ027FU1NTU1NTU3YBk3YBk3YBk3YBk3YBk0vXE3YBk1NT' .
-        'U3YBk3YBk3YBk3ZBU1NTU3VCE3aBU3YBk3VCE3YBk3YBk3XBk3YBk3YBk1SS03YBk3YBk3YBk1NTU1NTU1NTU3YBk1' .
-        'NTU1QS03YBk1tPU1NTU3YBk3XB03YBk3YBk1NTU3YBk3LDU3YBk1NTU3YBk1NTU3NDE1NTU3YBk3YBk3YBk1NTU1QT' .
-        'E3YBk3YBk1XSE3YBk1NTU1NTU1NTU3YBk3YBk3YBk1NTU3YBk3YBk3gAk1PTE3YBk3YBk3YBk3WB03YBk3eA03JDU3' .
-        'WB03YBk1NTU2/E03YBk1EUk3XB03YBk1NTU3YBk1EUk1JT01LTk1NTU1OTE1OTU1dRU1fRE2cJU3RCU3VB03WB03XB' .
-        'k3YBk3ZBU3aBU3cBE3eA03hAU3///+NV4AIAAAAkHRSTlMAAAAAAAAAAAAAAAAAAAAAAAABAQECAgICAgMDAwMEBAQ' .
-        'EBAQFBgYHCQoNDQ8PEBMVFxgfICEsLS8yNTU6Oz9AQUNFTE5PT1FWWFtgYWVnZ2ltb3B4fn+AgISGh42OlJiYmZ2fo' .
-        'KGjo6aoqbG1ubq6wMnKyszT2Nve4uXm6u3v8vj5+vr6+/v7/Pz8/f39/v6XkcTvAAABfUlEQVR4AX3QA4MbQRTA8Sn' .
-        'iV8Tm1E7N1HZT20htnRVzznfv9Envbez/en/LYa2TSdWcKMZ0NhttaqB4ihaTjKoCU+Fw69s7MpupSABarXfpltBtm' .
-        'U7GTghxT2Zz65ZowcG5FXTLNn4e/rdJpmOy10I83yAzuTxmtQrAsm7/t0z2utyoYDJ3SIhfZ21arf3cg+ChlWcmB8c' .
-        'fatYogdH7bkWE+Hn/2Mv5RBo/bjs/t9B5cYVzFaNvlB34lBIjubHowFAMf69/MtWHV8HBZBLJDj760RUfnZid7sXHu' .
-        'zCd7tkLjEj66uX6Hft2v5uJpbHb/wV78AWJRNJny3xwDcMYw6N3sR//b68MlW7t6iskYbx8gVZ4hJUDDjfzcuMkhtN' .
-        '4ilXiEKTzSfzwBul1x6vEAQF6S740duysEgMYvtO7MRnDXnwKVQJWONyD4XAsHMY//hohCvzFNE1f94C1Rog2X3r1/' .
-        'tlpTnuslhwGkLJagaSWDJw7uENSVhuUYm1aBIKXbqRcHZAFAAAAAElFTkSuQmCC\') center right no-repeat;' .
-        'background-size:auto 100%;padding:0 25px 4px 0;text-decoration:none;">Creame</a></strong> ' .
-        'Soporte/incidencias: <a href="mailto:' . $email . '">' . $email . '</a></em>';
-
-    intervention('update-label-footer', $label);
-
-    // Remove Page Components
-    // all, editor, author, thumbnail, page-attributes, custom-fields, comments
-    intervention('remove-page-components', [
-        'author',
-        'custom-fields',
-        'comments',
-    ]);
-
-    // Remove Post Components
-    // all, editor, author, excerpt, trackbacks, custom-fields, comments, slug, revisions, thumbnail
-    intervention('remove-post-components', [
-        // 'comments',
-        'trackbacks',
-        'custom-fields',
-    ]);
-
-    // Remove unused user fields
-    // options, option-title, option-editor, option-schemes, option-shortcuts, option-toolbar,
-    // names, name-first, name-last, name-nickname, name-display,
-    // contact, contact-web, about, about-bio, about-profile
-    intervention('remove-user-fields', [
-        'option-title',
-        'option-editor',
-        'option-schemes',
-        'option-shortcuts',
-        'contact',
-        'contact-web',
-        'about',
-        'about-bio',
-        'about-profile',
-    ]);
-
-    // Remove toolbar items for all
-    // logo, updates, site-name, comments, customize, new, new-post, new-page, new-media, new-user, account,
-    // account-user, account-profile, view, preview, archive
-    intervention('remove-toolbar-items', [
-        'logo',
-        'comments',
-        'customize',
-    ], 'all');
-
-    // Remove toolbar items for non-admin users
-    intervention('remove-toolbar-items', [
-        'updates',
-    ], 'all-not-admin');
-
-    // Remove update notices from non-admin users
-    intervention('remove-update-notices');
-
-    // Remove senseless user roles from WordPress
-    intervention('remove-user-roles', [
-        'subscriber',
-        'contributor',
-    ]);
-
-    // Set default pagination at 50 (wp default 20)
-    // intervention('update-pagination', 50);
-
-    // Remove Menu items
-    // all, danger-zone, dashboard, updates,
-    // posts, post-new, post-categories, post-tags,
-    // media, media-new,
-    // pages, page-new,
-    // comments,
-    // themes, theme-widgets, theme-menu, theme-editor,
-    // plugins, plugin-new, plugin-editor,
-    // users, user-new, user-profile,
-    // tools, tool-import, tool-export,
-    // settings, setting-writing, setting-reading, setting-media, setting-permalink, setting-discussion, setting-media, setting-disable-comments,
-    // acf, acf-new, acf-tools, acf-updates
-    intervention('remove-menu-items', 'danger-zone', 'all-not-admin');
-
-    intervention('remove-menu-items', [
-        // 'posts',
-        // 'comments',
-        'theme-editor',
-        'plugin-editor',
-        'tool-import',
-        'tool-export',
-    ], 'all');
-
-    // Remove ACF Menu items on production
-    if (defined('WP_ENV') && WP_ENV === 'production') {
-        intervention('remove-menu-items', [
-            'acf',
-            'acf-new',
-            'acf-tools',
-            'acf-updates',
-        ], 'all');
-    }
-
-    // Remove Tags taxonomy
-    // intervention('remove-taxonomies', 'tag');
-}
 
 // Hide update WordPress message
 function creame_hide_update_wordpress_notice() {
@@ -215,9 +51,9 @@ function creame_custom_avatar_url($url, $id_or_email, $args) {
 }
 add_filter('get_avatar_url', 'creame_custom_avatar_url', 10, 3);
 
-// Add wp-env-environment body class
+// Add wp-env--environment body class
 function creame_body_env_class( $classes ) {
-    $class = defined('WP_ENV') ? 'wp-env-' . WP_ENV : 'wp-env-none';
+    $class = defined('WP_ENV') ? 'wp-env--' . WP_ENV : 'wp-env--none';
     return is_array($classes) ? array_merge($classes, [$class]) : "$classes $class";
 }
 add_filter('admin_body_class', 'creame_body_env_class' );
@@ -234,6 +70,7 @@ function creame_custom_admin_styles() {
   .wrap.woocommerce .informacion, .wrap.woocommerce .cabecera, .wrap.woocommerce h3, /* WC - APG Campo NIF/CIF/NIE */
   div[id^=gainwp-container-]>div:last-child, /* GAinWP */
   #aiwp-container-1>div:last-child, /* Analytics Insights */
+  #seiwp-container-1>div:last-child, /* Search Engine Insights */
   #cache-settings .notice-info, /* Cache enabler */
   #e-dashboard-overview .e-overview__feed, /* Elementor dashboard widget */
   .itsec-pro-label /* iThemes Security */
@@ -257,6 +94,9 @@ if (!function_exists('wp_password_change_notification')) {
     function wp_password_change_notification() {}
 }
 
+// Disable admin email check interval
+add_filter('admin_email_check_interval', '__return_zero');
+
 // Disable XML-RPC
 add_filter('xmlrpc_enabled', '__return_false', PHP_INT_MAX);
 add_filter('xmlrpc_methods', '__return_empty_array', PHP_INT_MAX);
@@ -278,36 +118,23 @@ if (defined('WP_DEFAULT_THEME')) add_filter('wp_prepare_themes_for_js', 'creame_
 // Remove language selector on wp-admin login (WP 5.9)
 add_filter('login_display_language_dropdown', '__return_false');
 
-// Fix JetEngine assets path
-add_filter('cx_include_module_url', function($url, $path){
-    return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
-}, 10, 2);
-
-// Fix CMB2 assets url
-add_filter('cmb2_meta_box_url', function($url){
-    return preg_replace('/^.*\/releases\/\d+\/web\//', trailingslashit(WP_HOME), $url);
-});
-
 // Remove admin menus
 add_action('admin_menu', function(){
     remove_menu_page('jet-dashboard'); // JetPlugins
     remove_menu_page('filebird-settings'); // Filebird
 }, 100);
 
-// iThemes Security disable write wp-config.php
-add_filter('itsec_filter_can_write_to_files', '__return_false');
-
-// iThemes Security fix it_icon_font_admin_enueue_scripts()
-function fix_admin_ithemes_icon_font() {
-    if (wp_style_is('ithemes-icon-font')) {
-        wp_deregister_style('ithemes-icon-font');
-        wp_enqueue_style('ithemes-icon-font', plugin_dir_url('ithemes-security-pro/lib/icon-fonts/.').'icon-fonts.css');
-    }
-}
-add_action('admin_enqueue_scripts', 'fix_admin_ithemes_icon_font', 11);
+// Disable rate notices
+add_filter('pre_option_fbv_review', function(){ return '0'; }); // Filebird
+add_filter('pre_option_yaymail_noti_sale', '__return_true'); // Filebird YayMail
+add_filter('pre_option_duplicate_post_show_notice', '__return_zero'); // Duplicate Post
+add_filter('pre_transient_pwb-notice-delay', '__return_true'); // Perfect Woo Brands
 
 // object-cache.php disable flush error
 add_filter('pecl_memcached/warn_on_flush', '__return_false');
+
+// Clear object cache when empty Cache Enabler
+add_action('cache_enabler_complete_cache_cleared', 'wp_cache_flush', 9999);
 
 
 /**
@@ -323,7 +150,7 @@ function creame_post_mime_types($post_mime_types) {
 }
 add_filter('post_mime_types', 'creame_post_mime_types');
 
-// Attachment unique slugs (prevent post conflicts)
+// Attachment unique slugs (prevent post slug conflicts)
 function creame_unique_attachment_slug($slug, $post_ID, $post_status, $post_type, $post_parent, $original_slug) {
     return 'attachment' == $post_type ? uniqid('media-') : $slug;
 }
@@ -359,28 +186,30 @@ add_action('template_redirect', 'creame_attachment_redirect');
  * WP Head clean up
  * ============================================================================
  */
+
+// Clean header
 function creame_clean_header() {
-    remove_action('wp_head', 'wp_generator'); // Remove wordpress version
-    remove_action('wp_head', 'wlwmanifest_link'); // Remove wlwmanifest.xml (needed to support windows live writer)
-    remove_action('wp_head', 'rsd_link'); // Remove really simple discovery link
-    remove_action('wp_head', 'feed_links_extra', 3); // Remove all extra rss feed links
-    remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0); // Remove shortlink
-    remove_action('wp_head', 'wp_oembed_add_discovery_links'); // Remove oembed links
-    remove_action('wp_head', 'start_post_rel_link'); // Remove rel links
+    remove_action('wp_head', 'wp_generator');                             // Remove WordPress version
+    remove_action('wp_head', 'wlwmanifest_link');                         // Remove wlwmanifest.xml (needed to support windows live writer)
+    remove_action('wp_head', 'rsd_link');                                 // Remove really simple discovery link
+    remove_action('wp_head', 'feed_links_extra', 3);                      // Remove all extra rss feed links
+    remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);              // Remove shortlink
+    remove_action('wp_head', 'wp_oembed_add_discovery_links');            // Remove oembed links
+    remove_action('wp_head', 'start_post_rel_link');                      // Remove rel links
     remove_action('wp_head', 'index_rel_link');
     remove_action('wp_head', 'parent_post_rel_link');
     remove_action('wp_head', 'adjacent_posts_rel_link');
     remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
-    remove_action('wp_head', 'rest_output_link_wp_head'); // Remove REST-API link
-    remove_action('set_comment_cookies', 'wp_set_comment_cookies'); // Remove commments cookies
-    remove_action('template_redirect', 'wp_shortlink_header', 11, 0); // Remove HTTP headers
+    remove_action('wp_head', 'rest_output_link_wp_head');                 // Remove REST-API link
+    remove_action('set_comment_cookies', 'wp_set_comment_cookies');       // Remove commments cookies
+    remove_action('template_redirect', 'wp_shortlink_header', 11, 0);     // Remove HTTP headers
     remove_action('template_redirect', 'rest_output_link_header', 11, 0);
 
-    add_filter('the_generator', '__return_false'); // Removes the generator name from the RSS feeds
-    add_filter('use_default_gallery_style', '__return_false'); // Remove gallery inline styles
-    add_filter('feed_links_show_comments_feed', '__return_false'); // Remove comments feed link
-    add_filter('show_recent_comments_widget_style', '__return_false'); // Remove recent comments widget styles
-    add_filter('revslider_meta_generator', '__return_false'); // Remove plugin revslider generator meta
+    add_filter('the_generator', '__return_false');                        // Removes the generator name from the RSS feeds
+    add_filter('use_default_gallery_style', '__return_false');            // Remove gallery inline styles
+    add_filter('feed_links_show_comments_feed', '__return_false');        // Remove comments feed link
+    add_filter('show_recent_comments_widget_style', '__return_false');    // Remove recent comments widget styles
+    add_filter('revslider_meta_generator', '__return_false');             // Remove plugin revslider generator meta
 }
 add_action('after_setup_theme', 'creame_clean_header');
 
@@ -408,7 +237,7 @@ add_action('wp_default_scripts', 'creame_remove_jquery_migrate');
 // jQuery Shim: script for <header> to capture "jQuery" calls in html body.
 // Require call "shimJQ()" after jQuery is loaded to run captured functions.
 function creame_jquery_shim() {
-    echo '<script>!function(n,t){var i,f,u=[],o={};n[t]||(i=o.ready=function(n){u.push(n)},f=n[t]=function(n){return"function"==typeof n&&i(n),o},n.shimJQ=function(){if(n[t]!==f)for(;u.length;)n[t](u.shift())})}(window,"jQuery");</script>';
+    echo '<script>!function(w,j){var i,f,u=[],o={};w[j]||(i=o.ready=function(w){u.push(w)},f=w[j]=function(w){return"function"==typeof w&&i(w),o},w.shimJQ=function(){for(;u.length;)w[j](u.shift())})}(window,"jQuery");</script>';
 }
 
 // Move scripts to footer
@@ -456,7 +285,8 @@ add_filter('post_class', 'creame_remove_hentry_class');
 function creame_remove_only_admin_plugins ($plugins){
     return array_diff($plugins, [
         'classic-editor/classic-editor.php',
-        'duplicate-post/duplicate-post.php',
+        'filebird/filebird.php',
+        // 'duplicate-post/duplicate-post.php',
         // add more project specific plugins
     ]);
 }
@@ -493,6 +323,65 @@ remove_action('in_admin_header', 'wp_global_styles_render_svg_filters');
 // Only load blocks assets for current page
 add_filter('should_load_separate_core_block_assets', '__return_true');
 
+// Clean attrs for preload featured image
+function creame_preload_featured_image_atts($attr) {
+    return array_intersect_key($attr, array_flip(['src', 'srcset', 'sizes']));
+}
+
+// Preload featured image for single posts
+function creame_preload_featured_image() {
+    if (!is_singular()) return;
+
+    $thumbnail_id = get_post_thumbnail_id(get_the_ID());
+    if (!$thumbnail_id) return;
+
+    add_filter('wp_get_attachment_image_attributes', 'creame_preload_featured_image_atts');
+    $image = wp_get_attachment_image($thumbnail_id, 'full'); // 'thumbnail', 'medium', 'medium_large', 'large', 'full'...
+    remove_filter('wp_get_attachment_image_attributes', 'creame_preload_featured_image_atts');
+
+    if (!$image) return;
+
+    $image = preg_replace('/<img (width="\d+" )?(height="\d+" )?/', '<link rel="preload" as="image" ', $image);
+    echo str_replace([' src=', ' srcset=', ' sizes='], [' href=', ' imagesrcset=', ' imagesizes='], $image);
+}
+// add_action('wp_head', 'creame_preload_featured_image', 5);
+
+
+/**
+ * ============================================================================
+ * Bedrock fixes
+ * ============================================================================
+ */
+
+// Fix flush rewrite hard is_writable() warning
+add_filter('flush_rewrite_rules_hard', '__return_false');
+
+// JetEngine fix assets path
+add_filter('cx_include_module_url', function($url, $path){
+    return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
+}, 10, 2);
+
+// CMB2 fix assets url
+add_filter('cmb2_meta_box_url', function($url){
+    return preg_replace('/^.*\/releases\/\d+\/web\//', trailingslashit(WP_HOME), $url);
+});
+
+// iThemes Security disable write wp-config.php
+add_filter('itsec_filter_can_write_to_files', '__return_false');
+
+// iThemes Security fix it_icon_font_admin_enueue_scripts()
+function fix_admin_ithemes_icon_font() {
+    if (wp_style_is('ithemes-icon-font')) {
+        wp_deregister_style('ithemes-icon-font');
+        wp_enqueue_style('ithemes-icon-font', plugin_dir_url('ithemes-security-pro/lib/icon-fonts/.').'icon-fonts.css');
+    }
+}
+add_action('admin_enqueue_scripts', 'fix_admin_ithemes_icon_font', 11);
+
+// Fix remove '/wp/'
+define('AUTOPTIMIZE_WP_SITE_URL', WP_HOME); // Autoptimize, for url replace
+define('SEIWP_SITE_URL', home_url('/'));    // Search Engine Insights, site url
+
 
 /**
  * ============================================================================
@@ -516,24 +405,29 @@ function creame_remove_admin_addon_submenu() {
 add_action('admin_menu', 'creame_remove_admin_addon_submenu', 999);
 
 // Sync first name between WP <=> Woo users
-function creame_sync_first_name_wp_woo( $first_name ) {
+function creame_sync_first_name_wp_woo($first_name) {
     return $_POST['billing_first_name'] ?? $first_name;
 }
-add_filter( 'pre_user_first_name', 'creame_sync_first_name_wp_woo' );
+add_filter('pre_user_first_name', 'creame_sync_first_name_wp_woo');
 
 // Sync last name between WP <=> Woo users
-function creame_sync_last_name_wp_woo( $last_name ) {
+function creame_sync_last_name_wp_woo($last_name) {
     return $_POST['billing_last_name'] ?? $last_name;
 }
-add_filter( 'pre_user_last_name', 'creame_sync_last_name_wp_woo' );
+add_filter('pre_user_last_name', 'creame_sync_last_name_wp_woo');
 
-function creame_fix_resource_hints( $urls, $relation_type ) {
+// Fix prefetch & prerender links
+function creame_fix_resource_hints($urls, $relation_type) {
     if (!in_array($relation_type, ['prefetch', 'prerender'], true)) return $urls;
     $abspath = untrailingslashit(get_option('siteurl')).'/wp-includes/';
     foreach ($urls as &$url) $url['href'] = preg_replace('/^\/wp-includes\//', $abspath, $url['href']);
     return $urls;
 }
 add_filter('wp_resource_hints', 'creame_fix_resource_hints', 20, 2);
+
+// Disable Stripe scripts out of checkout page
+add_filter('wc_stripe_load_scripts_on_product_page_when_prbs_disabled', '__return_false');
+add_filter('wc_stripe_load_scripts_on_cart_page_when_prbs_disabled', '__return_false');
 
 
 /**
@@ -569,14 +463,12 @@ function creame_elementor_post_state_icon($states) {
 }
 add_filter('display_post_states', 'creame_elementor_post_state_icon', 100);
 
+
 /**
  * ============================================================================
  * Autoptimize
  * ============================================================================
  */
-
-// Fix '/wp/' for url replace
-define('AUTOPTIMIZE_WP_SITE_URL', WP_HOME);
 
 // Remove image optimize notice
 add_filter('autoptimize_filter_main_imgopt_plug_notice', '__return_empty_string');
@@ -612,21 +504,30 @@ add_filter('the_seo_framework_generated_description', 'creame_fix_generated_desc
 
 // Add custom rules to robots.txt
 function creame_custom_robots_txt($robots) {
-    return $robots . PHP_EOL .
-        "Allow: /*.js$" . PHP_EOL .
-        "Allow: /*.css$" . PHP_EOL .
-        PHP_EOL .
-        "Disallow: /?s=" . PHP_EOL .
-        "Disallow: /search" . PHP_EOL .
-        PHP_EOL .
-        "Allow: /feed/$" . PHP_EOL .
-        "Disallow: /comments/feed" . PHP_EOL .
-        "Disallow: /*/feed/$" . PHP_EOL .
-        "Disallow: /*/feed/rss/$" . PHP_EOL .
-        "Disallow: /*/*/feed/$" . PHP_EOL .
-        "Disallow: /*/*/feed/rss/$" . PHP_EOL .
-        "Disallow: /*/*/*/feed/$" . PHP_EOL .
-        "Disallow: /*/*/*/feed/rss/$" . PHP_EOL;
+    // Set language slugs (if Polylang languages set from directory)
+    // $langs = ['es', 'en'];
+
+    $slug     = empty($langs) ? '' : '/*';
+    $sitemaps = empty($langs) ? [] : array_map(function($l){ return "Sitemap: " . WP_HOME . "/$l/sitemap.xml\n"; }, $langs);
+
+    return $robots .
+        implode('', $sitemaps) .
+        "\n" .
+        "Allow: /*.js$\n" .
+        "Allow: /*.css$\n" .
+        "\n" .
+        "Disallow: /?s=\n" .
+        "Disallow: $slug/?s=\n" .
+        "Disallow: $slug/search\n" .
+        "\n" .
+        "Allow: $slug/feed/$\n" .
+        "Disallow: $slug/comments/feed\n" .
+        "Disallow: $slug/*/feed/$\n" .
+        "Disallow: $slug/*/feed/rss/$\n" .
+        "Disallow: $slug/*/*/feed/$\n" .
+        "Disallow: $slug/*/*/feed/rss/$\n" .
+        "Disallow: $slug/*/*/*/feed/$\n" .
+        "Disallow: $slug/*/*/*/feed/rss/$\n";
 }
 add_filter('robots_txt', 'creame_custom_robots_txt', 11);
 
@@ -639,13 +540,14 @@ add_filter('robots_txt', 'creame_custom_robots_txt', 11);
 
 // Add '_loco' to default Loco context
 function custom_loco_file_mod_allowed_context($context, $file) {
-    return strpos($file->dirname(), 'languages/loco') === false ? $context : $context . '_loco';
+    return strpos($file->dirname(), 'languages/loco') !== false ? 'download_language_pack_loco' : $context;
 }
 add_filter('loco_file_mod_allowed_context', 'custom_loco_file_mod_allowed_context', 10, 2);
 
 // If context is 'download_language_pack_loco' always allow modification
 function custom_file_mod_allowed($allow, $context) {
-    return 'download_language_pack_loco' === $context ? true : $allow;
+    if (wp_doing_ajax()) return 'download_language_pack' === $context ? true : $allow;
+    else return 'download_language_pack_loco' === $context ? true : $allow;
 }
 add_filter('file_mod_allowed', 'custom_file_mod_allowed', 10, 2);
 
@@ -684,7 +586,31 @@ function creame_ga_selfhosted_script($src) {
 if (defined('WP_ENV') && WP_ENV === 'production') {
     add_action('delete_expired_transients', 'creame_ga_update_script');
     add_filter('gainwp_analytics_script_path', 'creame_ga_selfhosted_script');
+    add_filter('aiwp_analytics_script_path', 'creame_ga_selfhosted_script');
 }
+
+// GA4 Elementor forms submit track event 'form_submit'
+function creame_elementor_form_submit_track() {
+    if (!wp_script_is('aiwp-tracking-analytics-events')) return;
+    ob_start(); ?>
+<script>
+jQuery(function($){
+    $(document).on('submit_success', function (e) {
+        window.gtag && gtag('event', 'form_submit', {
+            form_id: e.target.id || '',
+            form_name: e.target.name || '',
+            form_destination: e.target.action || '',
+            form_submit_text: e.target.querySelector('[type=submit]').innerText || '',
+        });
+    });
+});
+</script>
+    <?php
+    $script = str_replace(array('<script>', '</script>'), '', ob_get_clean());
+    wp_add_inline_script('aiwp-tracking-analytics-events', $script, 'after');
+}
+add_action('wp_head', 'creame_elementor_form_submit_track', 100);
+add_action('wp_footer', 'creame_elementor_form_submit_track', 100);
 
 
 /**
@@ -692,3 +618,5 @@ if (defined('WP_ENV') && WP_ENV === 'production') {
  * Custom project scripts
  * ============================================================================
  */
+
+// It's your turn...
