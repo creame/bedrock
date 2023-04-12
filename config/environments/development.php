@@ -28,5 +28,7 @@ Config::define('DISABLED_PLUGINS', serialize([
   'autoptimize/autoptimize.php',
   'bunnycdn/bunnycdn.php',
   'cache-enabler/cache-enabler.php',
+  'complianz-gdpr/complianz-gpdr.php',
+  'complianz-gdpr-premium/complianz-gpdr-premium.php',
   'ithemes-security-pro/ithemes-security-pro.php',
 ]));
