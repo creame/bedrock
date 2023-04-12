@@ -55,6 +55,7 @@
     "wpackagist-plugin/autoptimize": "^3.1",
     "wpackagist-plugin/cache-enabler": "^1.8",
     "wpackagist-plugin/duplicate-post": "^4.5",
+    "wpackagist-plugin/dynamo": "^1.1",
     "wpackagist-plugin/elementor": "^3.11",
     "wpackagist-plugin/images-to-webp": "^4.1",
     "wpackagist-plugin/redirection": "^5.3",
