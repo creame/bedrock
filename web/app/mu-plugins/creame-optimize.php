@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.0.4
+Version:      2.1.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -124,11 +124,12 @@ add_action('admin_menu', function(){
     remove_menu_page('filebird-settings'); // Filebird
 }, 100);
 
-// Disable rate notices
+// Disable rate/upsell notices
 add_filter('pre_option_fbv_review', function(){ return '0'; }); // Filebird
 add_filter('pre_option_yaymail_noti_sale', '__return_true'); // Filebird YayMail
 add_filter('pre_option_duplicate_post_show_notice', '__return_zero'); // Duplicate Post
 add_filter('pre_transient_pwb-notice-delay', '__return_true'); // Perfect Woo Brands
+add_filter('jetpack_just_in_time_msgs', '__return_false'); // Jetpack
 
 // object-cache.php disable flush error
 add_filter('pecl_memcached/warn_on_flush', '__return_false');
@@ -180,6 +181,23 @@ function creame_attachment_redirect(){
 }
 add_action('template_redirect', 'creame_attachment_redirect');
 
+// Remove emojis
+function creame_remove_emojis(){
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    add_filter('emoji_svg_url', '__return_false');
+    add_filter('tiny_mce_plugins', function ($plugins) {
+        return is_array($plugins) ? array_diff($plugins, ['wpemoji']) : [];
+    });
+}
+add_action('admin_init', 'creame_remove_emojis');
+add_action('init', 'creame_remove_emojis');
+
 
 /**
  * ============================================================================
@@ -220,14 +238,6 @@ function creame_remove_cssjs_ver_filter($src){
 add_filter('style_loader_src', 'creame_remove_cssjs_ver_filter');
 add_filter('script_loader_src', 'creame_remove_cssjs_ver_filter');
 
-// Google Fonts replace with Bunny Fonts (GDPR compliant) & add "font-display:swap"
-function creame_google_fonts($src){
-    if (false === strpos($src, 'fonts.googleapis.com')) return $src;
-    $src = str_replace('fonts.googleapis.com/css', 'fonts.bunny.net/css', $src);
-    return false !== strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
-}
-add_filter('style_loader_src', 'creame_google_fonts', 100);
-
 // Remove jQuery migrate
 function creame_remove_jquery_migrate($scripts) {
     if (!is_admin()) $scripts->registered['jquery']->deps = array_diff($scripts->registered['jquery']->deps, ['jquery-migrate']);
@@ -242,7 +252,7 @@ function creame_jquery_shim() {
 
 // Move scripts to footer
 function creame_move_scripts_to_footer() {
-    if (isset($_GET['elementor-preview'])) return;
+    if (isset($_GET['elementor-preview']) || is_admin_bar_showing()) return;
 
     remove_action('wp_head', 'wp_print_scripts');
     remove_action('wp_head', 'wp_print_head_scripts', 9);
@@ -285,8 +295,7 @@ add_filter('post_class', 'creame_remove_hentry_class');
 function creame_remove_only_admin_plugins ($plugins){
     return array_diff($plugins, [
         'classic-editor/classic-editor.php',
-        'filebird/filebird.php',
-        // 'duplicate-post/duplicate-post.php',
+        'duplicate-post/duplicate-post.php',
         // add more project specific plugins
     ]);
 }
@@ -345,6 +354,48 @@ function creame_preload_featured_image() {
     echo str_replace([' src=', ' srcset=', ' sizes='], [' href=', ' imagesrcset=', ' imagesizes='], $image);
 }
 // add_action('wp_head', 'creame_preload_featured_image', 5);
+
+
+/**
+ * ============================================================================
+ * Fonts
+ * ============================================================================
+ */
+
+add_filter('style_loader_src', 'creame_google_to_bunny_fonts', 100);
+add_filter('style_loader_src', 'creame_bunny_fonts_inline', 110, 2);
+add_action('wp', 'creame_elementor_remove_google_fonts_preconnect_tag');
+
+// Google Fonts replace with Bunny Fonts (GDPR compliant) & add "font-display:swap"
+function creame_google_to_bunny_fonts($src){
+    if (false === strpos($src, 'fonts.googleapis.com')) return $src;
+    $src = str_replace('fonts.googleapis.com/css', 'fonts.bunny.net/css', $src);
+    return false !== strpos($src, 'display=') ? add_query_arg('display', 'swap', $src) : $src;
+}
+
+// Inline Bunny Fonts CSS (request from server and store it in transient)
+function creame_bunny_fonts_inline($src, $handle){
+    if (false === strpos($src, 'fonts.bunny.net')) return $src;
+
+    $key = 'fonts_bunnynet_' . md5($src);
+    if (false === $css = get_transient($key)){
+        $css = wp_remote_retrieve_body(wp_safe_remote_get($src, ['timeout' => 1]));
+        if (empty($css)) return $src;
+        // Remove spaces & comments
+        $css = preg_replace(['/(\s*)([{|}|:|;|,])(\s+)/', '/\/\*.*\*\//'], ['$2', ''], $css);
+        set_transient($key, $css, DAY_IN_SECONDS * 2);
+    }
+    // Print preconnect link and styles (prevent autoptimize)
+    echo "\n<link rel=\"preconnect\" href=\"https://fonts.bunny.net/\" crossorigin>";
+    echo "\n<!-- noptimize --><style id=\"$handle-inline-css\">$css\n</style><!-- /noptimize -->\n";
+    // Return empty src
+    return '';
+}
+
+// Remove Elementor Google Fonts preconnect tag
+function creame_elementor_remove_google_fonts_preconnect_tag(){
+    if (class_exists('Elementor\Plugin')) remove_action( 'wp_head', [Elementor\Plugin::instance()->frontend, 'print_google_fonts_preconnect_tag'], 8);
+}
 
 
 /**
@@ -463,10 +514,19 @@ function creame_elementor_post_state_icon($states) {
 }
 add_filter('display_post_states', 'creame_elementor_post_state_icon', 100);
 
+// Load Elementor assets from CDN
+function creame_elementor_assets_from_cdn($assets_url){
+    if (!class_exists('BunnyCDN')) return $assets_url;
+    $options = BunnyCDN::getOptions();
+    return str_replace($options['site_url'], 'https://'.$options['cdn_domain_name'], $assets_url);
+}
+add_filter('elementor/frontend/assets_url', 'creame_elementor_assets_from_cdn');
+add_filter('elementor_pro/frontend/assets_url', 'creame_elementor_assets_from_cdn');
+
 
 /**
  * ============================================================================
- * Autoptimize
+ * Autoptimize & CDN
  * ============================================================================
  */
 
@@ -478,12 +538,24 @@ add_filter('autoptimize_filter_css_fonts_cdn', '__return_true');
 
 // Fix BunnyCDN priority to apply before Autoptimize
 function creame_fix_bunnycdn_with_autoptimize () {
-    if ( class_exists('BunnyCDN') ) {
-        remove_action('template_redirect', 'doRewrite');
-        add_action('template_redirect', 'doRewrite', 1);
-    }
+    if (!class_exists('BunnyCDN')) return;
+    remove_action('template_redirect', 'doRewrite');
+    add_action('template_redirect', 'doRewrite', 1);
 }
 add_action('init', 'creame_fix_bunnycdn_with_autoptimize', 20);
+
+// Clear BunnyCDN cache, better call by "do_action('cdn_clear');"
+function creame_bunnycdn_clear_cache () {
+    if (!class_exists('BunnyCDN')) return;
+    $options = BunnyCDN::getOptions();
+    if (empty($options['api_key'])) return;
+
+    $endpoint = add_query_arg('hostname', urlencode($options['cdn_domain_name']), 'https://bunnycdn.com/api/pullzone/purgeCacheByHostname');
+    $headers = ['headers' => ['AccessKey' => trim(htmlspecialchars($options['api_key']))]];
+    wp_remote_post($endpoint, $headers);
+}
+add_action('cdn_clear', 'creame_bunnycdn_clear_cache');
+add_action('cache_enabler_complete_cache_cleared', 'creame_bunnycdn_clear_cache'); // On Cache Enabler cleared
 
 
 /**
