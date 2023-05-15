@@ -129,6 +129,16 @@ Config::define('WP_DEBUG_LOG', false);
 Config::define('SCRIPT_DEBUG', false);
 ini_set('display_errors', '0');
 
+// Set memory limit
+Config::define('WP_MEMORY_LIMIT', '256M');
+
+// Enable cache
+Config::define('WP_CACHE', true);
+Config::define('WP_CACHE_KEY_SALT', 'example');
+
+// Main Theme (disable Wordpress core themes twenty...)
+// Config::define('WP_DEFAULT_THEME', 'my-theme');
+
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
  * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
@@ -136,16 +146,6 @@ ini_set('display_errors', '0');
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
     $_SERVER['HTTPS'] = 'on';
 }
-
-/**
- * Creame Settings
- */
-Config::define('WP_MEMORY_LIMIT', '256M');
-Config::define('WP_CACHE', true);
-Config::define('WP_CACHE_KEY_SALT', 'example');
-Config::define('CREAME_SUPPORT_EMAIL', 'i@crea.me');
-// Main Theme (disable Wordpress core themes twenty...)
-// Config::define('WP_DEFAULT_THEME', 'my-theme');
 
 $env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 
