@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.1.0
+Version:      2.1.2
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -265,10 +265,21 @@ function creame_move_scripts_to_footer() {
     // Add jQuery Shim
     if (wp_script_is('jquery-core')){
         add_action('wp_head', 'creame_jquery_shim');
-        wp_add_inline_script('jquery-core', 'shimJQ()');
+        wp_add_inline_script('jquery-core', 'shimJQ();');
     }
 }
 add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer', 11);
+
+// Set jQuery passive listeners (view: https://stackoverflow.com/a/62177358)
+function creame_jquery_passive_listeners() {
+    wp_add_inline_script('jquery-core', '' +
+        'jQuery.event.special.touchstart={setup:function(_,n,h){this.addEventListener("touchstart",n,{passive:!h.includes("noPreventDefault")})}};' +
+        'jQuery.event.special.touchmove={setup:function(_,n,h){this.addEventListener("touchmove",n,{passive:!h.includes("noPreventDefault")})}};' +
+        'jQuery.event.special.wheel={setup:function(_,n,h){this.addEventListener("wheel",n,{passive:true})}};' +
+        'jQuery.event.special.mousewheel={setup:function(_,n,h){this.addEventListener("mousewheel",n,{passive:true})}};'
+    );
+}
+add_action('wp_enqueue_scripts', 'creame_jquery_passive_listeners', 11);
 
 // Clean enqueued style and script tags
 function creame_clean_style_and_script_tags($tag) {
@@ -381,14 +392,14 @@ function creame_bunny_fonts_inline($src, $handle){
     if (false === $css = get_transient($key)){
         $css = wp_remote_retrieve_body(wp_safe_remote_get($src, ['timeout' => 1]));
         if (empty($css)) return $src;
-        // Remove spaces & comments
-        $css = preg_replace(['/(\s*)([{|}|:|;|,])(\s+)/', '/\/\*.*\*\//'], ['$2', ''], $css);
+
+        $css = preg_replace(['/(\s*)([{|}|:|;|,])(\s+)/', '/\/\*.*\*\//'], ['$2', ''], $css); // Remove spaces & comments
+        $css = join("\n", array_filter(explode("\n", $css), function($l){ return str_contains($l, '-latin-'); })); // Only latin chars
         set_transient($key, $css, DAY_IN_SECONDS * 2);
     }
-    // Print preconnect link and styles (prevent autoptimize)
+    // Print preconnect link and styles (prevent autoptimize) & return empty src
     echo "\n<link rel=\"preconnect\" href=\"https://fonts.bunny.net/\" crossorigin>";
-    echo "\n<!-- noptimize --><style id=\"$handle-inline-css\">$css\n</style><!-- /noptimize -->\n";
-    // Return empty src
+    echo "\n<!-- noptimize --><style id=\"$handle-inline-css\">\n$css\n</style><!-- /noptimize -->\n";
     return '';
 }
 
