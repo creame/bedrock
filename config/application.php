@@ -121,14 +121,6 @@ Config::define('DISALLOW_FILE_MODS', true);
 // Limit the number of post revisions
 Config::define('WP_POST_REVISIONS', env('WP_POST_REVISIONS') ?? true);
 
-/**
- * Debugging Settings
- */
-Config::define('WP_DEBUG_DISPLAY', false);
-Config::define('WP_DEBUG_LOG', false);
-Config::define('SCRIPT_DEBUG', false);
-ini_set('display_errors', '0');
-
 // Set memory limit
 Config::define('WP_MEMORY_LIMIT', '256M');
 
@@ -138,6 +130,14 @@ Config::define('WP_CACHE_KEY_SALT', 'example');
 
 // Main Theme (disable Wordpress core themes twenty...)
 // Config::define('WP_DEFAULT_THEME', 'my-theme');
+
+/**
+ * Debugging Settings
+ */
+Config::define('WP_DEBUG_DISPLAY', false);
+Config::define('WP_DEBUG_LOG', false);
+Config::define('SCRIPT_DEBUG', false);
+ini_set('display_errors', '0');
 
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
