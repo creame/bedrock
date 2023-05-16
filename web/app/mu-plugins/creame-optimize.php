@@ -272,10 +272,10 @@ add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer', 11);
 
 // Set jQuery passive listeners (view: https://stackoverflow.com/a/62177358)
 function creame_jquery_passive_listeners() {
-    wp_add_inline_script('jquery-core', '' +
-        'jQuery.event.special.touchstart={setup:function(_,n,h){this.addEventListener("touchstart",n,{passive:!h.includes("noPreventDefault")})}};' +
-        'jQuery.event.special.touchmove={setup:function(_,n,h){this.addEventListener("touchmove",n,{passive:!h.includes("noPreventDefault")})}};' +
-        'jQuery.event.special.wheel={setup:function(_,n,h){this.addEventListener("wheel",n,{passive:true})}};' +
+    wp_add_inline_script('jquery-core', '' .
+        'jQuery.event.special.touchstart={setup:function(_,n,h){this.addEventListener("touchstart",n,{passive:!h.includes("noPreventDefault")})}};' .
+        'jQuery.event.special.touchmove={setup:function(_,n,h){this.addEventListener("touchmove",n,{passive:!h.includes("noPreventDefault")})}};' .
+        'jQuery.event.special.wheel={setup:function(_,n,h){this.addEventListener("wheel",n,{passive:true})}};' .
         'jQuery.event.special.mousewheel={setup:function(_,n,h){this.addEventListener("mousewheel",n,{passive:true})}};'
     );
 }
