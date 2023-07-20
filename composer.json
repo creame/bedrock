@@ -46,7 +46,7 @@
     "roots/wordpress": "6.2.*",
     "roots/wp-config": "1.0.0",
     "roots/wp-password-bcrypt": "1.1.0",
-    "vendor/elementor-pro": "^3.11",
+    "vendor/elementor-pro": "^3.14",
     "vendor/ithemes-security-pro": "^7.3",
     "vlucas/phpdotenv": "^5.5",
     "wpackagist-plugin/analytics-insights": "^5.8",
@@ -55,11 +55,11 @@
     "wpackagist-plugin/cache-enabler": "^1.8",
     "wpackagist-plugin/duplicate-post": "^4.5",
     "wpackagist-plugin/dynamo": "^1.1",
-    "wpackagist-plugin/elementor": "^3.11",
-    "wpackagist-plugin/images-to-webp": "^4.1",
+    "wpackagist-plugin/elementor": "^3.14",
+    "wpackagist-plugin/images-to-webp": "^4.3",
     "wpackagist-plugin/intervention": "^2.0",
     "wpackagist-plugin/redirection": "^5.3",
-    "wpackagist-theme/hello-elementor": "^2.6"
+    "wpackagist-theme/hello-elementor": "^2.8"
   },
   "require-dev": {
     "mindtwo/wplang": "^2.1",
