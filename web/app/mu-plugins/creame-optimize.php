@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.1.2
+Version:      2.1.3
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -265,21 +265,10 @@ function creame_move_scripts_to_footer() {
     // Add jQuery Shim
     if (wp_script_is('jquery-core')){
         add_action('wp_head', 'creame_jquery_shim');
-        wp_add_inline_script('jquery-core', 'shimJQ();');
+        wp_add_inline_script('jquery-core', 'window.shimJQ && shimJQ();');
     }
 }
 add_action('wp_enqueue_scripts', 'creame_move_scripts_to_footer', 11);
-
-// Set jQuery passive listeners (view: https://stackoverflow.com/a/62177358)
-function creame_jquery_passive_listeners() {
-    wp_add_inline_script('jquery-core', '' .
-        'jQuery.event.special.touchstart={setup:function(_,n,h){this.addEventListener("touchstart",n,{passive:!h.includes("noPreventDefault")})}};' .
-        'jQuery.event.special.touchmove={setup:function(_,n,h){this.addEventListener("touchmove",n,{passive:!h.includes("noPreventDefault")})}};' .
-        'jQuery.event.special.wheel={setup:function(_,n,h){this.addEventListener("wheel",n,{passive:true})}};' .
-        'jQuery.event.special.mousewheel={setup:function(_,n,h){this.addEventListener("mousewheel",n,{passive:true})}};'
-    );
-}
-add_action('wp_enqueue_scripts', 'creame_jquery_passive_listeners', 11);
 
 // Clean enqueued style and script tags
 function creame_clean_style_and_script_tags($tag) {
@@ -443,6 +432,10 @@ add_action('admin_enqueue_scripts', 'fix_admin_ithemes_icon_font', 11);
 // Fix remove '/wp/'
 define('AUTOPTIMIZE_WP_SITE_URL', WP_HOME); // Autoptimize, for url replace
 define('SEIWP_SITE_URL', home_url('/'));    // Search Engine Insights, site url
+
+// Images to WebP set base path
+add_filter('itw_abspath', function($path){ return trailingslashit( WP_CONTENT_DIR ); });
+
 
 
 /**
