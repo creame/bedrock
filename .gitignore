@@ -14,7 +14,7 @@ web/app/languages/*
 !web/app/languages/plugins/
 web/app/languages/plugins/*
 !web/app/languages/plugins/elementor-pro-*
-web/app/languages/**/*.php
+*.mo.php
 
 # Plugins tracked
 #!web/app/plugins/plugin-name/
