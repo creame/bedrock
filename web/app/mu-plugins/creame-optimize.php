@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.1.3
+Version:      2.1.4
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -30,7 +30,7 @@ function creame_stop_heartbeat() {
 
 // Or change Heartbeat interval setting
 function creame_heartbeat_interval($settings) {
-    $settings['interval'] = 60;
+    $settings['interval'] = 90;
     return $settings;
 }
 add_filter('heartbeat_settings', 'creame_heartbeat_interval');
@@ -291,15 +291,19 @@ function creame_remove_hentry_class($classes) {
 }
 add_filter('post_class', 'creame_remove_hentry_class');
 
-// Conditional plugin load. Exclude in front plugins for admin only
-function creame_remove_only_admin_plugins ($plugins){
-    return array_diff($plugins, [
+// Conditional plugin load.
+function creame_active_plugins ($plugins){
+    // Heartbeat disable all
+    if (wp_doing_ajax() && 'heartbeat' === $_POST['action']) return [];
+    // Admin only plugins
+    if (!defined('WP_CLI') && !is_admin()) return array_diff($plugins, [
         'classic-editor/classic-editor.php',
         'duplicate-post/duplicate-post.php',
         // add more project specific plugins
     ]);
+    return $plugins;
 }
-if (!defined('WP_CLI') && !is_admin()) add_filter('option_active_plugins', 'creame_remove_only_admin_plugins', 1);
+add_filter('option_active_plugins', 'creame_active_plugins', 1);
 
 // SEO no index search results
 function creame_noindex_search() {
@@ -470,6 +474,13 @@ function creame_sync_last_name_wp_woo($last_name) {
     return $_POST['billing_last_name'] ?? $last_name;
 }
 add_filter('pre_user_last_name', 'creame_sync_last_name_wp_woo');
+
+// Hide customer shipping fields if disabled
+function creame_customer_hide_shipping($fields) {
+    if ('disabled' === get_option('woocommerce_ship_to_countries') || 'billing_only' === get_option('woocommerce_ship_to_destination')) unset($fields['shipping']);
+    return $fields;
+}
+add_filter('woocommerce_customer_meta_fields', 'creame_customer_hide_shipping');
 
 // Fix prefetch & prerender links
 function creame_fix_resource_hints($urls, $relation_type) {
