@@ -294,7 +294,7 @@ add_filter('post_class', 'creame_remove_hentry_class');
 // Conditional plugin load.
 function creame_active_plugins ($plugins){
     // Heartbeat disable all
-    if (wp_doing_ajax() && 'heartbeat' === $_POST['action']) return [];
+    if (wp_doing_ajax() && isset($_POST['action']) && 'heartbeat' === $_POST['action']) return [];
     // Admin only plugins
     if (!defined('WP_CLI') && !is_admin()) return array_diff($plugins, [
         'classic-editor/classic-editor.php',
@@ -441,7 +441,6 @@ define('SEIWP_SITE_URL', home_url('/'));    // Search Engine Insights, site url
 add_filter('itw_abspath', function($path){ return trailingslashit( WP_CONTENT_DIR ); });
 
 
-
 /**
  * ============================================================================
  * WooCommerce
@@ -480,8 +479,8 @@ function creame_customer_hide_shipping($fields) {
     if ('disabled' === get_option('woocommerce_ship_to_countries') || 'billing_only' === get_option('woocommerce_ship_to_destination')) unset($fields['shipping']);
     return $fields;
 }
-add_filter('woocommerce_customer_meta_fields', 'creame_customer_hide_shipping');
 
+add_filter('woocommerce_customer_meta_fields', 'creame_customer_hide_shipping');
 // Fix prefetch & prerender links
 function creame_fix_resource_hints($urls, $relation_type) {
     if (!in_array($relation_type, ['prefetch', 'prerender'], true)) return $urls;
@@ -494,6 +493,11 @@ add_filter('wp_resource_hints', 'creame_fix_resource_hints', 20, 2);
 // Disable Stripe scripts out of checkout page
 add_filter('wc_stripe_load_scripts_on_product_page_when_prbs_disabled', '__return_false');
 add_filter('wc_stripe_load_scripts_on_cart_page_when_prbs_disabled', '__return_false');
+
+// Disable ssl checkout on development
+if (defined('WP_ENV') && WP_ENV === 'development') {
+    add_filter('pre_option_woocommerce_force_ssl_checkout', '__return_zero');
+}
 
 
 /**
