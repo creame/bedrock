@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.1.4
+Version:      2.1.5
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -293,8 +293,8 @@ add_filter('post_class', 'creame_remove_hentry_class');
 
 // Conditional plugin load.
 function creame_active_plugins ($plugins){
-    // Heartbeat disable all
-    if (wp_doing_ajax() && isset($_POST['action']) && 'heartbeat' === $_POST['action']) return [];
+    // Heartbeat disable all (except Elementor)
+    if (wp_doing_ajax() && isset($_POST['action']) && 'heartbeat' === $_POST['action']) return array_intersect($plugins, ['elementor/elementor.php']);
     // Admin only plugins
     if (!defined('WP_CLI') && !is_admin()) return array_diff($plugins, [
         'classic-editor/classic-editor.php',
@@ -456,6 +456,9 @@ add_filter('woocommerce_allow_marketplace_suggestions', '__return_false', 999);
 // Disable connect to woocommerce.com notice
 add_filter('woocommerce_helper_suppress_admin_notices', '__return_true');
 
+// Disable Woo usage tracking
+add_filter('pre_option_woocommerce_allow_tracking', '__return_false');
+
 // Disable extensions menu
 function creame_remove_admin_addon_submenu() {
     remove_submenu_page('woocommerce', 'wc-addons');
@@ -479,8 +482,8 @@ function creame_customer_hide_shipping($fields) {
     if ('disabled' === get_option('woocommerce_ship_to_countries') || 'billing_only' === get_option('woocommerce_ship_to_destination')) unset($fields['shipping']);
     return $fields;
 }
-
 add_filter('woocommerce_customer_meta_fields', 'creame_customer_hide_shipping');
+
 // Fix prefetch & prerender links
 function creame_fix_resource_hints($urls, $relation_type) {
     if (!in_array($relation_type, ['prefetch', 'prerender'], true)) return $urls;
