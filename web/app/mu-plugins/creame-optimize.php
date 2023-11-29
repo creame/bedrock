@@ -293,8 +293,12 @@ add_filter('post_class', 'creame_remove_hentry_class');
 
 // Conditional plugin load.
 function creame_active_plugins ($plugins){
-    // Heartbeat disable all (except Elementor)
-    if (wp_doing_ajax() && isset($_POST['action']) && 'heartbeat' === $_POST['action']) return array_intersect($plugins, ['elementor/elementor.php']);
+    // Heartbeat disable all without heartbeat filters
+    if (wp_doing_ajax() && isset($_POST['action']) && 'heartbeat' === $_POST['action']) return array_intersect($plugins, [
+        'elementor/elementor.php',
+        'ithemes-security-pro/ithemes-security-pro.php',
+        'woocommerce/woocommerce.php',
+    ]);
     // Admin only plugins
     if (!defined('WP_CLI') && !is_admin()) return array_diff($plugins, [
         'classic-editor/classic-editor.php',
