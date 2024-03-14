@@ -49,7 +49,7 @@
     "vendor/elementor-pro": "^3.17",
     "vendor/ithemes-security-pro": "^7.3",
     "vlucas/phpdotenv": "^5.5",
-    "wpackagist-plugin/analytics-insights": "^6.0",
+    "wpackagist-plugin/analytics-insights": "^6.3",
     "wpackagist-plugin/autodescription": "^5.0",
     "wpackagist-plugin/autoptimize": "^3.1",
     "wpackagist-plugin/cache-enabler": "^1.8",
@@ -59,7 +59,7 @@
     "wpackagist-plugin/intervention": "^2.0",
     "wpackagist-plugin/performant-translations": "^1.0",
     "wpackagist-plugin/redirection": "^5.3",
-    "wpackagist-theme/hello-elementor": "^2.9"
+    "wpackagist-theme/hello-elementor": "^3.0"
   },
   "require-dev": {
     "mindtwo/wplang": "^2.1",
