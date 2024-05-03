@@ -128,6 +128,9 @@ Config::define('WP_MEMORY_LIMIT', '256M');
 Config::define('WP_CACHE', true);
 Config::define('WP_CACHE_KEY_SALT', 'example');
 
+// Disable concatenate scripts
+Config::define('CONCATENATE_SCRIPTS', false);
+
 // Main Theme (disable Wordpress core themes twenty...)
 // Config::define('WP_DEFAULT_THEME', 'my-theme');
 
