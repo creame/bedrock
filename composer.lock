@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef7b30cbe4ebeb52afef87ba71f22ca4",
+    "content-hash": "4caabeb34a3f9ea038b25de5a153753f",
     "packages": [
         {
             "name": "composer/installers",
@@ -464,7 +464,7 @@
         },
         {
             "name": "roots/wordpress",
-            "version": "6.4.3",
+            "version": "6.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/roots/wordpress.git",
@@ -495,7 +495,7 @@
             ],
             "support": {
                 "issues": "https://github.com/roots/wordpress/issues",
-                "source": "https://github.com/roots/wordpress/tree/6.4.3"
+                "source": "https://github.com/roots/wordpress/tree/6.5.3"
             },
             "funding": [
                 {
@@ -578,22 +578,22 @@
         },
         {
             "name": "roots/wordpress-no-content",
-            "version": "6.4.3",
+            "version": "6.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress.git",
-                "reference": "6.4.3"
+                "reference": "6.5.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/release/wordpress-6.4.3-no-content.zip",
-                "shasum": "4138c6337bf524159b406d5b27916deebb0f78df"
+                "url": "https://downloads.wordpress.org/release/wordpress-6.5.3-no-content.zip",
+                "shasum": "adeffdc339d34eab4209e88b17966d8917e36e91"
             },
             "require": {
                 "php": ">= 7.0.0"
             },
             "provide": {
-                "wordpress/core-implementation": "6.4.3"
+                "wordpress/core-implementation": "6.5.3"
             },
             "suggest": {
                 "ext-curl": "Performs remote request operations.",
@@ -644,7 +644,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-01-30T19:32:01+00:00"
+            "time": "2024-05-07T16:02:20+00:00"
         },
         {
             "name": "roots/wp-config",
@@ -1096,15 +1096,15 @@
         },
         {
             "name": "wpackagist-theme/twentytwentyfour",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/twentytwentyfour/",
-                "reference": "1.0"
+                "reference": "1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/twentytwentyfour.1.0.zip"
+                "url": "https://downloads.wordpress.org/theme/twentytwentyfour.1.1.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -1531,16 +1531,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.8.1",
+            "version": "3.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "14f5fff1e64118595db5408e946f3a22c75807f7"
+                "reference": "267a4405fff1d9c847134db3a3c92f1ab7f77909"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/14f5fff1e64118595db5408e946f3a22c75807f7",
-                "reference": "14f5fff1e64118595db5408e946f3a22c75807f7",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/267a4405fff1d9c847134db3a3c92f1ab7f77909",
+                "reference": "267a4405fff1d9c847134db3a3c92f1ab7f77909",
                 "shasum": ""
             },
             "require": {
@@ -1607,7 +1607,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-11T20:47:48+00:00"
+            "time": "2024-03-31T21:03:09+00:00"
         }
     ],
     "aliases": [],
