@@ -57,6 +57,7 @@
     "wpackagist-plugin/elementor": "^3.20",
     "wpackagist-plugin/images-to-webp": "^4.5",
     "wpackagist-plugin/intervention": "^2.0",
+    "wpackagist-plugin/menu-caching": "^1.1",
     "wpackagist-plugin/performant-translations": "^1.1",
     "wpackagist-plugin/redirection": "^5.4",
     "wpackagist-theme/hello-elementor": "^3.0"
