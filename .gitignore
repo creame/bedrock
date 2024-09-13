@@ -2,11 +2,13 @@
 web/app/plugins/*
 !web/app/plugins/.gitkeep
 web/app/mu-plugins/*/
-web/app/themes/hello-elementor/
 web/app/upgrade
 web/app/uploads/*
 !web/app/uploads/.gitkeep
 web/app/cache/*
+
+# Theme
+web/app/themes/hello-elementor/
 
 # Languages except out of WP repo and Loco
 web/app/languages/*
@@ -24,7 +26,7 @@ web/app/languages/plugins/*
 web/wp
 web/.htaccess
 
-# WP-CLI
+# DB dumps
 *.sql
 *.sql.gz
 
