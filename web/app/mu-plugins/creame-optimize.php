@@ -3,16 +3,20 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.1.5
+Version:      2.2.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
 */
 
 
+// Set WP_ENV
+if (!defined('WP_ENV')) define('WP_ENV', 'production');
+
+
 /**
  * ============================================================================
- * WP Admin clean up
+ * MARK: WP Admin clean up
  * ============================================================================
  */
 
@@ -53,8 +57,8 @@ add_filter('get_avatar_url', 'creame_custom_avatar_url', 10, 3);
 
 // Add wp-env--environment body class
 function creame_body_env_class( $classes ) {
-    $class = defined('WP_ENV') ? 'wp-env--' . WP_ENV : 'wp-env--none';
-    return is_array($classes) ? array_merge($classes, [$class]) : "$classes $class";
+    $wp_env = 'wp-env--' . WP_ENV;
+    return is_array($classes) ? array_merge($classes, [$wp_env]) : "$classes $wp_env";
 }
 add_filter('admin_body_class', 'creame_body_env_class' );
 add_filter('login_body_class', 'creame_body_env_class' );
@@ -140,11 +144,11 @@ add_action('cache_enabler_complete_cache_cleared', 'wp_cache_flush', 9999);
 
 /**
  * ============================================================================
- * WP Media
+ * MARK: WP Media
  * ============================================================================
  */
 
-// Sort media library by pdf file type
+// Filter media library by pdf file type
 function creame_post_mime_types($post_mime_types) {
     $post_mime_types['application/pdf'] = [__('PDF'), __('Manage PDF'), _n_noop('PDF <span class="count">(%s)</span>', 'PDF <span class="count">(%s)</span>')];
     return $post_mime_types;
@@ -176,32 +180,12 @@ function creame_attachment_title($post_ID) {
 add_action('add_attachment', 'creame_attachment_title');
 
 // Redirect attachment page to attachment file
-function creame_attachment_redirect(){
-    if (is_attachment()) wp_redirect(wp_get_attachment_url(), 301);
-}
-add_action('template_redirect', 'creame_attachment_redirect');
-
-// Remove emojis
-function creame_remove_emojis(){
-    remove_action('admin_print_styles', 'print_emoji_styles');
-    remove_action('wp_head', 'print_emoji_detection_script', 7);
-    remove_action('admin_print_scripts', 'print_emoji_detection_script');
-    remove_action('wp_print_styles', 'print_emoji_styles');
-    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
-    remove_filter('the_content_feed', 'wp_staticize_emoji');
-    remove_filter('comment_text_rss', 'wp_staticize_emoji');
-    add_filter('emoji_svg_url', '__return_false');
-    add_filter('tiny_mce_plugins', function ($plugins) {
-        return is_array($plugins) ? array_diff($plugins, ['wpemoji']) : [];
-    });
-}
-add_action('admin_init', 'creame_remove_emojis');
-add_action('init', 'creame_remove_emojis');
+add_action('template_redirect', function(){ if (is_attachment()) wp_redirect(wp_get_attachment_url(), 301); });
 
 
 /**
  * ============================================================================
- * WP Head clean up
+ * MARK: WP Head clean up
  * ============================================================================
  */
 
@@ -231,6 +215,21 @@ function creame_clean_header() {
 }
 add_action('after_setup_theme', 'creame_clean_header');
 
+// Remove emojis
+function creame_remove_emojis(){
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    add_filter('emoji_svg_url', '__return_false');
+    add_filter('tiny_mce_plugins', function($plugins){ return is_array($plugins) ? array_diff($plugins, ['wpemoji']) : []; });
+}
+add_action('admin_init', 'creame_remove_emojis');
+add_action('init', 'creame_remove_emojis');
+
 // Remove CSS and JS query strings versions
 function creame_remove_cssjs_ver_filter($src){
     return is_admin() ? $src : remove_query_arg('ver', $src);
@@ -244,12 +243,6 @@ function creame_remove_jquery_migrate($scripts) {
 }
 add_action('wp_default_scripts', 'creame_remove_jquery_migrate');
 
-// jQuery Shim: script for <header> to capture "jQuery" calls in html body.
-// Require call "shimJQ()" after jQuery is loaded to run captured functions.
-function creame_jquery_shim() {
-    echo '<script>!function(w,j){var i,f,u=[],o={};w[j]||(i=o.ready=function(w){u.push(w)},f=w[j]=function(w){return"function"==typeof w&&i(w),o},w.shimJQ=function(){for(;u.length;)w[j](u.shift())})}(window,"jQuery");</script>';
-}
-
 // Move scripts to footer
 function creame_move_scripts_to_footer() {
     if (isset($_GET['elementor-preview']) || is_admin_bar_showing()) return;
@@ -262,9 +255,10 @@ function creame_move_scripts_to_footer() {
     add_action('wp_footer', 'wp_enqueue_scripts', 5);
     add_action('wp_footer', 'wp_print_head_scripts', 5);
 
-    // Add jQuery Shim
+    // Add jQuery Shim: script for <header> to capture "jQuery" calls in html body.
+    // Require call "shimJQ()" after jQuery is loaded to run captured functions.
     if (wp_script_is('jquery-core')){
-        add_action('wp_head', 'creame_jquery_shim');
+        add_action('wp_head', function(){ echo '<script>!function(w,j){var i,f,u=[],o={};w[j]||(i=o.ready=function(w){u.push(w)},f=w[j]=function(w){return"function"==typeof w&&i(w),o},w.shimJQ=function(){for(;u.length;)w[j](u.shift())})}(window,"jQuery");</script>'; });
         wp_add_inline_script('jquery-core', 'window.shimJQ && shimJQ();');
     }
 }
@@ -286,10 +280,7 @@ add_filter('style_loader_tag', 'creame_clean_style_and_script_tags');
 add_filter('script_loader_tag', 'creame_clean_style_and_script_tags');
 
 // Remove hentry class on pages (fix error on google search console)
-function creame_remove_hentry_class($classes) {
-    return is_single() ? $classes : array_diff($classes, ['hentry']);
-}
-add_filter('post_class', 'creame_remove_hentry_class');
+add_filter('post_class', function($classes){ return is_single() ? $classes : array_diff($classes, ['hentry']); });
 
 // Conditional plugin load.
 function creame_active_plugins ($plugins){
@@ -310,10 +301,7 @@ function creame_active_plugins ($plugins){
 add_filter('option_active_plugins', 'creame_active_plugins', 1);
 
 // SEO no index search results
-function creame_noindex_search() {
-    if (is_search()) echo '<meta name="robots" content="noindex, follow">' . PHP_EOL;
-}
-add_action('wp_head', 'creame_noindex_search');
+add_action('wp_head', function(){ if (is_search()) echo '<meta name="robots" content="noindex, follow">' . PHP_EOL; });
 
 // Remove filter capital P dangit
 remove_filter('the_title', 'capital_P_dangit', 11);
@@ -340,21 +328,18 @@ remove_action('in_admin_header', 'wp_global_styles_render_svg_filters');
 // Only load blocks assets for current page
 add_filter('should_load_separate_core_block_assets', '__return_true');
 
-// Clean attrs for preload featured image
-function creame_preload_featured_image_atts($attr) {
-    return array_intersect_key($attr, array_flip(['src', 'srcset', 'sizes']));
-}
-
-// Preload featured image for single posts
+// Preload featured image for single posts (better page speed if used for hero image)
 function creame_preload_featured_image() {
     if (!is_singular()) return;
 
     $thumbnail_id = get_post_thumbnail_id(get_the_ID());
     if (!$thumbnail_id) return;
 
-    add_filter('wp_get_attachment_image_attributes', 'creame_preload_featured_image_atts');
+    $preload_atts = function($attr) { return array_intersect_key($attr, array_flip(['src', 'srcset', 'sizes'])); };
+
+    add_filter('wp_get_attachment_image_attributes', $preload_atts);
     $image = wp_get_attachment_image($thumbnail_id, 'full'); // 'thumbnail', 'medium', 'medium_large', 'large', 'full'...
-    remove_filter('wp_get_attachment_image_attributes', 'creame_preload_featured_image_atts');
+    remove_filter('wp_get_attachment_image_attributes', $preload_atts);
 
     if (!$image) return;
 
@@ -366,7 +351,7 @@ function creame_preload_featured_image() {
 
 /**
  * ============================================================================
- * Fonts
+ * MARK: Fonts
  * ============================================================================
  */
 
@@ -408,7 +393,7 @@ function creame_elementor_remove_google_fonts_preconnect_tag(){
 
 /**
  * ============================================================================
- * Bedrock fixes
+ * MARK: Bedrock fixes
  * ============================================================================
  */
 
@@ -447,7 +432,7 @@ add_filter('itw_abspath', function($path){ return trailingslashit( WP_CONTENT_DI
 
 /**
  * ============================================================================
- * WooCommerce
+ * MARK: WooCommerce
  * ============================================================================
  */
 
@@ -464,22 +449,11 @@ add_filter('woocommerce_helper_suppress_admin_notices', '__return_true');
 add_filter('pre_option_woocommerce_allow_tracking', '__return_false');
 
 // Disable extensions menu
-function creame_remove_admin_addon_submenu() {
-    remove_submenu_page('woocommerce', 'wc-addons');
-}
-add_action('admin_menu', 'creame_remove_admin_addon_submenu', 999);
+add_action('admin_menu', function() { remove_submenu_page('woocommerce', 'wc-addons'); }, 999);
 
-// Sync first name between WP <=> Woo users
-function creame_sync_first_name_wp_woo($first_name) {
-    return $_POST['billing_first_name'] ?? $first_name;
-}
-add_filter('pre_user_first_name', 'creame_sync_first_name_wp_woo');
-
-// Sync last name between WP <=> Woo users
-function creame_sync_last_name_wp_woo($last_name) {
-    return $_POST['billing_last_name'] ?? $last_name;
-}
-add_filter('pre_user_last_name', 'creame_sync_last_name_wp_woo');
+// Sync first/last name between WP <=> Woo users
+add_filter('pre_user_first_name', function($first_name) { return $_POST['billing_first_name'] ?? $first_name; });
+add_filter('pre_user_last_name', function($last_name) { return $_POST['billing_last_name'] ?? $last_name; });
 
 // Hide customer shipping fields if disabled
 function creame_customer_hide_shipping($fields) {
@@ -502,22 +476,23 @@ add_filter('wc_stripe_load_scripts_on_product_page_when_prbs_disabled', '__retur
 add_filter('wc_stripe_load_scripts_on_cart_page_when_prbs_disabled', '__return_false');
 
 // Disable ssl checkout on development
-if (defined('WP_ENV') && WP_ENV === 'development') {
-    add_filter('pre_option_woocommerce_force_ssl_checkout', '__return_zero');
-}
+if (WP_ENV === 'development') add_filter('pre_option_woocommerce_force_ssl_checkout', '__return_zero');
+
+// Woo Subscriptions in staging mode
+add_filter('woocommerce_subscriptions_is_duplicate_site', function($is_duplicate){ return $is_duplicate || WP_ENV !== 'production'; });
+
+// Stripe Gateway in test mode
+add_filter('pre_option_fkwcs_mode', function($null){ return WP_ENV === 'production' ? $null : 'test'; });
 
 
 /**
  * ============================================================================
- * Elementor
+ * MARK: Elementor
  * ============================================================================
  */
 
 // Elementor dashboard widget disable
-function creame_disable_elementor_dashboard_overview_widget() {
-    remove_meta_box('e-dashboard-overview', 'dashboard', 'normal');
-}
-add_action('wp_dashboard_setup', 'creame_disable_elementor_dashboard_overview_widget', 40);
+add_action('wp_dashboard_setup', function(){ remove_meta_box('e-dashboard-overview', 'dashboard', 'normal'); }, 40);
 
 // Elementor editor reduce widgets size
 add_action('elementor/editor/after_enqueue_styles', function(){
@@ -549,10 +524,30 @@ function creame_elementor_assets_from_cdn($assets_url){
 add_filter('elementor/frontend/assets_url', 'creame_elementor_assets_from_cdn');
 add_filter('elementor_pro/frontend/assets_url', 'creame_elementor_assets_from_cdn');
 
+// GA4 Elementor forms submit track event 'form_submit'
+function creame_elementor_form_submit_track() {
+    if (!wp_script_is('aiwp-tracking-analytics-events')) return;
+    $script = <<<SCRIPT
+        jQuery(function($){
+            $(document).on('submit_success', function (e) {
+                window.gtag && gtag('event', 'form_submit', {
+                    form_id: e.target.id || '',
+                    form_name: e.target.name || '',
+                    form_destination: e.target.action || '',
+                    form_submit_text: e.target.querySelector('[type=submit]').innerText || '',
+                });
+            });
+        });
+        SCRIPT;
+    wp_add_inline_script('aiwp-tracking-analytics-events', $script, 'after');
+}
+add_action('wp_head', 'creame_elementor_form_submit_track', 100);
+add_action('wp_footer', 'creame_elementor_form_submit_track', 100);
+
 
 /**
  * ============================================================================
- * Autoptimize & CDN
+ * MARK: Autoptimize & CDN
  * ============================================================================
  */
 
@@ -586,7 +581,7 @@ add_action('cache_enabler_complete_cache_cleared', 'creame_bunnycdn_clear_cache'
 
 /**
  * ============================================================================
- * The SEO Framework
+ * MARK: The SEO Framework
  * ============================================================================
  */
 
@@ -632,7 +627,7 @@ add_filter('robots_txt', 'creame_custom_robots_txt', 11);
 
 /**
  * ============================================================================
- * Loco Translate, always allow file modification on Custom location
+ * MARK: Loco Translate
  * ============================================================================
  */
 
@@ -652,68 +647,7 @@ add_filter('file_mod_allowed', 'custom_file_mod_allowed', 10, 2);
 
 /**
  * ============================================================================
- * Google Analytics selfhosted (avoid "leverage browser caching")
- * ============================================================================
- */
-
-// Update ga script (hooked on 'delete_expired_transients' daily CRON)
-function creame_ga_update_script() {
-    $cache_path = WP_CONTENT_DIR . '/cache/ga';
-
-    if (wp_mkdir_p($cache_path)) {
-        $request = wp_safe_remote_get('https://www.google-analytics.com/analytics.js', ['timeout' => 10]);
-
-        if (!is_wp_error($request)) {
-            $ga_lm = strtotime(wp_remote_retrieve_header($request, 'last-modified'));
-
-            if ($ga_lm !== get_option('ga_last_modified')) {
-                file_put_contents("$cache_path/$ga_lm.js" , wp_remote_retrieve_body($request));
-                update_option('ga_last_modified', $ga_lm);
-                do_action('ce_clear_cache'); // "Cache Enabler" clear caches
-            }
-        }
-    }
-}
-
-// Replace ga script with selfhosted (for GAinWP)
-function creame_ga_selfhosted_script($src) {
-    $ga_lm = get_option('ga_last_modified');
-    return $ga_lm ? content_url("/cache/ga/$ga_lm.js") : $src;
-}
-
-if (defined('WP_ENV') && WP_ENV === 'production') {
-    add_action('delete_expired_transients', 'creame_ga_update_script');
-    add_filter('gainwp_analytics_script_path', 'creame_ga_selfhosted_script');
-    add_filter('aiwp_analytics_script_path', 'creame_ga_selfhosted_script');
-}
-
-// GA4 Elementor forms submit track event 'form_submit'
-function creame_elementor_form_submit_track() {
-    if (!wp_script_is('aiwp-tracking-analytics-events')) return;
-    ob_start(); ?>
-<script>
-jQuery(function($){
-    $(document).on('submit_success', function (e) {
-        window.gtag && gtag('event', 'form_submit', {
-            form_id: e.target.id || '',
-            form_name: e.target.name || '',
-            form_destination: e.target.action || '',
-            form_submit_text: e.target.querySelector('[type=submit]').innerText || '',
-        });
-    });
-});
-</script>
-    <?php
-    $script = str_replace(array('<script>', '</script>'), '', ob_get_clean());
-    wp_add_inline_script('aiwp-tracking-analytics-events', $script, 'after');
-}
-add_action('wp_head', 'creame_elementor_form_submit_track', 100);
-add_action('wp_footer', 'creame_elementor_form_submit_track', 100);
-
-
-/**
- * ============================================================================
- * Custom project scripts
+ * MARK: Custom project
  * ============================================================================
  */
 
