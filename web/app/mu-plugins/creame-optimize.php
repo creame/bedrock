@@ -448,6 +448,11 @@ add_filter('woocommerce_helper_suppress_admin_notices', '__return_true');
 // Disable Woo usage tracking
 add_filter('pre_option_woocommerce_allow_tracking', '__return_false');
 
+// Disable Install WooCommerce Update Manager notice
+add_filter('get_user_metadata', function($null, $user_id, $meta_key) {
+    return 'dismissed_woo_updater_not_installed_notice' === $meta_key ? true : $null;
+}, 10, 3);
+
 // Disable extensions menu
 add_action('admin_menu', function() { remove_submenu_page('woocommerce', 'wc-addons'); }, 999);
 
