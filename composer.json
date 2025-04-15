@@ -58,14 +58,14 @@
     "wpackagist-plugin/images-to-webp": "^4.7",
     "wpackagist-plugin/intervention": "^2.0",
     "wpackagist-plugin/menu-caching": "^1.1",
-    "wpackagist-plugin/performant-translations": "^1.2",
     "wpackagist-plugin/redirection": "^5.5",
     "wpackagist-theme/hello-elementor": "^3.1"
   },
   "require-dev": {
     "mindtwo/wplang": "^2.1",
     "squizlabs/php_codesniffer": "^3.7.1",
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "wpackagist-plugin/performant-translations": "^1.2"
   },
   "config": {
     "optimize-autoloader": true,
