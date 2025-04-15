@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "a7016ce6081c36254b4c782e89a5e65b",
+=======
+    "content-hash": "2099ee438a5f0ac37dc987dc4968ac6c",
+>>>>>>> master
     "packages": [
         {
             "name": "composer/installers",
@@ -216,16 +220,16 @@
         },
         {
             "name": "oscarotero/env",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/env.git",
-                "reference": "0da22cadc6924155fa9bbea2cdda2e84ab7cbdd3"
+                "reference": "9f7d85cc6890f06a65bad4fe0077c070d596e4a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/env/zipball/0da22cadc6924155fa9bbea2cdda2e84ab7cbdd3",
-                "reference": "0da22cadc6924155fa9bbea2cdda2e84ab7cbdd3",
+                "url": "https://api.github.com/repos/oscarotero/env/zipball/9f7d85cc6890f06a65bad4fe0077c070d596e4a4",
+                "reference": "9f7d85cc6890f06a65bad4fe0077c070d596e4a4",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +238,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.16",
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": ">=7.0"
             },
             "type": "library",
             "autoload": {
@@ -265,9 +269,15 @@
             "support": {
                 "email": "oom@oscarotero.com",
                 "issues": "https://github.com/oscarotero/env/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/oscarotero/env/tree/v2.1.0"
             },
             "time": "2020-06-11T10:59:27+00:00"
+=======
+                "source": "https://github.com/oscarotero/env/tree/v2.1.1"
+            },
+            "time": "2024-12-03T01:02:28+00:00"
+>>>>>>> master
         },
         {
             "name": "phpoption/phpoption",
@@ -480,16 +490,16 @@
         },
         {
             "name": "roots/wordpress",
-            "version": "6.6.2",
+            "version": "6.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/roots/wordpress.git",
-                "reference": "1bdabdb9171ac5323edbf4792ce353d475467d27"
+                "reference": "c53e4173d239dcaf8889f9f84c0b827a0cf643e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/roots/wordpress/zipball/1bdabdb9171ac5323edbf4792ce353d475467d27",
-                "reference": "1bdabdb9171ac5323edbf4792ce353d475467d27",
+                "url": "https://api.github.com/repos/roots/wordpress/zipball/c53e4173d239dcaf8889f9f84c0b827a0cf643e9",
+                "reference": "c53e4173d239dcaf8889f9f84c0b827a0cf643e9",
                 "shasum": ""
             },
             "require": {
@@ -511,7 +521,7 @@
             ],
             "support": {
                 "issues": "https://github.com/roots/wordpress/issues",
-                "source": "https://github.com/roots/wordpress/tree/6.6.2"
+                "source": "https://github.com/roots/wordpress/tree/6.7.2"
             },
             "funding": [
                 {
@@ -519,7 +529,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-16T12:03:00+00:00"
+            "time": "2024-12-15T16:32:37+00:00"
         },
         {
             "name": "roots/wordpress-core-installer",
@@ -594,22 +604,22 @@
         },
         {
             "name": "roots/wordpress-no-content",
-            "version": "6.6.2",
+            "version": "6.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress.git",
-                "reference": "6.6.2"
+                "reference": "6.7.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/release/wordpress-6.6.2-no-content.zip",
-                "shasum": "b496b8a9bb3c6d20a781344cbe3e189f7fd83871"
+                "url": "https://downloads.wordpress.org/release/wordpress-6.7.2-no-content.zip",
+                "shasum": "c33ca276601dee0ddf1e80d3e66403929a696e63"
             },
             "require": {
                 "php": ">= 7.2.24"
             },
             "provide": {
-                "wordpress/core-implementation": "6.6.2"
+                "wordpress/core-implementation": "6.7.2"
             },
             "suggest": {
                 "ext-curl": "Performs remote request operations.",
@@ -660,7 +670,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-09-10T15:25:31+00:00"
+            "time": "2025-02-11T16:29:31+00:00"
         },
         {
             "name": "roots/wp-config",
@@ -1131,6 +1141,7 @@
             "time": "2024-07-20T21:52:34+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "wpackagist-plugin/analytics-insights",
             "version": "6.3.7",
             "source": {
@@ -1339,16 +1350,33 @@
             "dist": {
                 "type": "zip",
                 "url": "https://downloads.wordpress.org/theme/hello-elementor.3.1.1.zip"
+=======
+            "name": "wpackagist-theme/twentytwentyfive",
+            "version": "1.1",
+            "source": {
+                "type": "svn",
+                "url": "https://themes.svn.wordpress.org/twentytwentyfive/",
+                "reference": "1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/theme/twentytwentyfive.1.1.zip"
+>>>>>>> master
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
             },
             "type": "wordpress-theme",
+<<<<<<< HEAD
             "homepage": "https://wordpress.org/themes/hello-elementor/"
+=======
+            "homepage": "https://wordpress.org/themes/twentytwentyfive/"
+>>>>>>> master
         }
     ],
     "packages-dev": [
         {
+<<<<<<< HEAD
             "name": "mindtwo/wplang",
             "version": "2.1.1",
             "source": {
@@ -1375,10 +1403,51 @@
             "autoload": {
                 "psr-4": {
                     "Mirai\\Wplang\\": "src"
+=======
+            "name": "laravel/pint",
+            "version": "v1.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/pint.git",
+                "reference": "53072e8ea22213a7ed168a8a15b96fbb8b82d44b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/53072e8ea22213a7ed168a8a15b96fbb8b82d44b",
+                "reference": "53072e8ea22213a7ed168a8a15b96fbb8b82d44b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-tokenizer": "*",
+                "ext-xml": "*",
+                "php": "^8.1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.66.0",
+                "illuminate/view": "^10.48.25",
+                "larastan/larastan": "^2.9.12",
+                "laravel-zero/framework": "^10.48.25",
+                "mockery/mockery": "^1.6.12",
+                "nunomaduro/termwind": "^1.17.0",
+                "pestphp/pest": "^2.36.0"
+            },
+            "bin": [
+                "builds/pint"
+            ],
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "App\\": "app/",
+                    "Database\\Seeders\\": "database/seeders/",
+                    "Database\\Factories\\": "database/factories/"
+>>>>>>> master
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
+<<<<<<< HEAD
                 "GPL-2.0+"
             ],
             "authors": [
@@ -1400,6 +1469,30 @@
                 "source": "https://github.com/mindtwo/wplang/tree/2.1.1"
             },
             "time": "2022-07-14T10:36:53+00:00"
+=======
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nuno Maduro",
+                    "email": "enunomaduro@gmail.com"
+                }
+            ],
+            "description": "An opinionated code formatter for PHP.",
+            "homepage": "https://laravel.com",
+            "keywords": [
+                "format",
+                "formatter",
+                "lint",
+                "linter",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/pint/issues",
+                "source": "https://github.com/laravel/pint"
+            },
+            "time": "2025-01-14T16:20:53+00:00"
+>>>>>>> master
         },
         {
             "name": "roave/security-advisories",
@@ -2221,6 +2314,7 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2024-09-10T18:06:22+00:00"
         },
         {
@@ -2302,6 +2396,9 @@
                 }
             ],
             "time": "2024-07-21T23:26:44+00:00"
+=======
+            "time": "2021-11-10T17:18:39+00:00"
+>>>>>>> master
         }
     ],
     "aliases": [],
@@ -2312,8 +2409,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0"
+        "php": ">=8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
