@@ -400,6 +400,13 @@ function creame_elementor_remove_google_fonts_preconnect_tag(){
 // Fix flush rewrite hard is_writable() warning
 add_filter('flush_rewrite_rules_hard', '__return_false');
 
+// Fix js/css url https://example.com/app/srv/www/example/releases/20250320142042/web/app/plugins/
+function creame_remove_releases_path($src){
+    return preg_replace('#(/app/srv/.*/app/)#', '/app/', $src);
+}
+add_filter('style_loader_src', 'creame_remove_releases_path');
+add_filter('script_loader_src', 'creame_remove_releases_path');
+
 // JetEngine fix assets path
 add_filter('cx_include_module_url', function($url, $path){
     return plugin_dir_url(preg_replace('/\/releases\/\d+\//', '/current/', $path));
