@@ -26,7 +26,7 @@ $root_dir = dirname(__DIR__);
 /**
  * Document Root
  *
- * @var string
+ * @var non-falsy-string
  */
 $webroot_dir = preg_replace('/\/releases\/\d+\//', '/current/', $root_dir . '/web');
 
