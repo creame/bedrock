@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42f18370dab5962e3e6537e4765415ae",
+    "content-hash": "7b06d2525f68f39adfb43417b6ac2f0f",
     "packages": [
         {
             "name": "composer/installers",
@@ -964,6 +964,16 @@
                 "type": "zip",
                 "url": "https://packages.crea.me/download/elementor-pro-3.33.2.zip",
                 "reference": "elementor-pro-3.33.2.zip"
+            },
+            "type": "wordpress-plugin"
+        },
+        {
+            "name": "vendor/happyfiles-pro",
+            "version": "1.8.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://packages.crea.me/download/happyfiles-pro-1.8.3.zip",
+                "reference": "happyfiles-pro-1.8.3.zip"
             },
             "type": "wordpress-plugin"
         },
@@ -2450,12 +2460,14 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "roave/security-advisories": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
