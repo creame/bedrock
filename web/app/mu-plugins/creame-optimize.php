@@ -14,9 +14,9 @@ License:      MIT License
 if (!defined('WP_ENV')) define('WP_ENV', 'production');
 
 // Add daily optimize CRON job
-if (WP_ENV === 'production') {
-    add_action('admin_init', function(){ if (!wp_next_scheduled('creame_optimize_jobs') && !wp_installing()) wp_schedule_event(time(), 'daily', 'creame_optimize_jobs'); });
-}
+if (WP_ENV === 'production') add_action('admin_init', function(){
+    if (!wp_next_scheduled('creame_optimize_jobs') && !wp_installing()) wp_schedule_event(time(), 'daily', 'creame_optimize_jobs');
+});
 
 
 /**
@@ -671,6 +671,7 @@ function creame_active_plugins ($plugins){
     return $plugins;
 }
 add_filter('option_active_plugins', 'creame_active_plugins', 1);
+
 
 /**
  * ============================================================================
