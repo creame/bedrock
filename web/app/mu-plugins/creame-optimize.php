@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.3.0
+Version:      2.3.1
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
@@ -184,6 +184,17 @@ add_action('add_attachment', function($post_ID){
 
 // Redirect attachment page to attachment file
 add_action('template_redirect', function(){ if (is_attachment()) wp_redirect(wp_get_attachment_url(), 301); });
+
+// Fix PHP warnings for SVG, JSON, etc. without sizes
+add_filter('wp_get_attachment_metadata', function($data){
+    // Ensure 'full' size exists during AJAX requests.
+    if (wp_doing_ajax() && !isset($data['sizes']['full'])){
+        $data['sizes']['full'] = ['file' => false, 'width' => 0, 'height' => 0];
+    }
+    // Clear empty sizes.
+    $data['sizes'] = array_filter($data['sizes']);
+    return $data;
+});
 
 
 /**
