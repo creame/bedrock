@@ -83,6 +83,7 @@ function creame_custom_admin_styles(){
   #seiwp-container-1>div:last-child, /* Search Engine Insights */
   #cache_enabler_settings .notice-info, /* Cache Enabler */
   #e-dashboard-overview .e-overview__feed, /* Elementor dashboard widget */
+  #adminmenu .wp-submenu li:has(a[href$=elementor-one-upgrade]), /* Elementor One update */
   .itsec-pro-label /* iThemes Security */
   { display:none !important; }
   /* Bulk edit */
@@ -484,7 +485,7 @@ add_filter('pre_option_fkwcs_mode', function($null){ return WP_ENV === 'producti
  * ============================================================================
  */
 
-// Elementor dashboard widget disable
+// Disable Elementor dashboard widget
 add_action('wp_dashboard_setup', function(){ remove_meta_box('e-dashboard-overview', 'dashboard', 'normal'); }, 40);
 
 // Elementor editor reduce widgets size
@@ -492,11 +493,20 @@ add_action('elementor/editor/after_enqueue_styles', function(){
     wp_add_inline_style('elementor-editor', '.elementor-panel .elementor-element { display:flex; } .elementor-panel .elementor-element .icon { padding:5px; }');
 });
 
-// Elementor disable data tracking
+// Disable Elementor data tracking
 add_filter('pre_option_elementor_allow_tracking', function(){ return 'no'; });
 
-// Elementor disable generator meta tag
+// Disable Elementor generator meta tag
 add_filter('pre_option_elementor_meta_generator_tag', function(){ return '1'; });
+
+// Disable Elementor One update notification
+add_filter('pre_option_elementor_one_editor_update_notification_dismissed', '__return_true');
+
+// Disable Elementor AI
+add_filter('get_user_option_elementor_enable_ai', '__return_zero');
+
+// Disable Elementor Pro Notes notifications
+add_filter('get_user_option_elementor_pro_enable_notes_notifications', '__return_zero');
 
 // Elementor font-display https://developers.elementor.com/elementor-pro-2-7-custom-fonts-font-display-support/
 add_filter('elementor_pro/custom_fonts/font_display', function(){ return 'swap'; });
