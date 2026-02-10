@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b06d2525f68f39adfb43417b6ac2f0f",
+    "content-hash": "0227cffe694da00f45cc626159004653",
     "packages": [
         {
             "name": "composer/installers",
@@ -1196,6 +1196,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/menu-caching/"
+        },
+        {
+            "name": "wpackagist-plugin/no-nonsense",
+            "version": "3.6.5",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/no-nonsense/",
+                "reference": "tags/3.6.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/no-nonsense.3.6.5.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/no-nonsense/"
         },
         {
             "name": "wpackagist-plugin/redirection",
