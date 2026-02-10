@@ -3,7 +3,7 @@
 Plugin Name:  Creame Optimize
 Plugin URI:   https://crea.me/
 Description:  Optimizaciones de Creame para mejorar tu <em>site</em>.
-Version:      2.3.1
+Version:      2.4.0
 Author:       Creame
 Author URI:   https://crea.me/
 License:      MIT License
