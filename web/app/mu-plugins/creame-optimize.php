@@ -83,7 +83,6 @@ function creame_custom_admin_styles(){
   #seiwp-container-1>div:last-child, /* Search Engine Insights */
   #cache_enabler_settings .notice-info, /* Cache Enabler */
   #e-dashboard-overview .e-overview__feed, /* Elementor dashboard widget */
-  #adminmenu .wp-submenu li:has(a[href$=elementor-one-upgrade]), /* Elementor One update */
   .itsec-pro-label /* iThemes Security */
   { display:none !important; }
   /* Bulk edit */
@@ -192,7 +191,7 @@ add_filter('wp_get_attachment_metadata', function($data){
         $data['sizes']['full'] = ['file' => false, 'width' => 0, 'height' => 0];
     }
     // Clear empty sizes.
-    $data['sizes'] = array_filter($data['sizes']);
+    $data['sizes'] = array_filter($data['sizes'] ?? []);
     return $data;
 });
 
@@ -209,17 +208,17 @@ function creame_clean_header(){
     remove_action('wp_head', 'wlwmanifest_link');                         // Remove wlwmanifest.xml (needed to support windows live writer)
     remove_action('wp_head', 'rsd_link');                                 // Remove really simple discovery link
     remove_action('wp_head', 'feed_links_extra', 3);                      // Remove all extra rss feed links
-    remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);              // Remove shortlink
+    remove_action('wp_head', 'wp_shortlink_wp_head', 10);              // Remove shortlink
     remove_action('wp_head', 'wp_oembed_add_discovery_links');            // Remove oembed links
     remove_action('wp_head', 'start_post_rel_link');                      // Remove rel links
     remove_action('wp_head', 'index_rel_link');
     remove_action('wp_head', 'parent_post_rel_link');
     remove_action('wp_head', 'adjacent_posts_rel_link');
-    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
     remove_action('wp_head', 'rest_output_link_wp_head');                 // Remove REST-API link
     remove_action('set_comment_cookies', 'wp_set_comment_cookies');       // Remove commments cookies
-    remove_action('template_redirect', 'wp_shortlink_header', 11, 0);     // Remove HTTP headers
-    remove_action('template_redirect', 'rest_output_link_header', 11, 0);
+    remove_action('template_redirect', 'wp_shortlink_header', 11);     // Remove HTTP headers
+    remove_action('template_redirect', 'rest_output_link_header', 11);
 
     add_filter('the_generator', '__return_empty_string');                 // Removes the generator name from the RSS feeds
     add_filter('use_default_gallery_style', '__return_false');            // Remove gallery inline styles
@@ -446,7 +445,9 @@ add_filter('woocommerce_allow_marketplace_suggestions', '__return_false', 999);
 add_filter('woocommerce_helper_suppress_admin_notices', '__return_true');
 
 // Disable Woo usage tracking
-add_filter('pre_option_woocommerce_allow_tracking', '__return_false');
+add_filter('pre_option_woocommerce_allow_tracking', fn() => 'no');
+add_filter('woocommerce_apply_user_tracking', '__return_false');
+add_filter('woocommerce_tracker_send_override', '__return_false');
 
 // Disable Install WooCommerce Update Manager notice
 add_filter('get_user_metadata', function($null, $user_id, $meta_key){
