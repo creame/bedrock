@@ -50,12 +50,12 @@
     "wp-plugin/analytics-insights": "^6.3",
     "wp-plugin/autodescription": "^5.1",
     "wp-plugin/cache-enabler": "^1.8",
-    "wp-plugin/duplicate-post": "^4.5",
+    "wp-plugin/duplicate-post": "^4.7",
     "wp-plugin/elementor": "^4.1",
-    "wp-plugin/images-to-webp": "^4.8",
+    "wp-plugin/images-to-webp": "^5.0",
     "wp-plugin/menu-caching": "^1.1",
     "wp-plugin/no-nonsense": "^3.6",
-    "wp-plugin/redirection": "^5.5",
+    "wp-plugin/redirection": "^5.9",
     "wp-theme/hello-elementor": "^3.4"
   },
   "require-dev": {
