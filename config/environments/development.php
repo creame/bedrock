@@ -32,5 +32,6 @@ Config::define('DISABLED_PLUGINS', serialize([
   'cache-enabler/cache-enabler.php',
   'complianz-gdpr/complianz-gpdr.php',
   'complianz-gdpr-premium/complianz-gpdr-premium.php',
-  'ithemes-security-pro/ithemes-security-pro.php',
+  'fluent-smtp/fluent-smtp.php',
+  'perfmatters/perfmatters.php',
 ]));
