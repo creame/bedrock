@@ -208,16 +208,16 @@ function creame_clean_header(){
     remove_action('wp_head', 'wlwmanifest_link');                         // Remove wlwmanifest.xml (needed to support windows live writer)
     remove_action('wp_head', 'rsd_link');                                 // Remove really simple discovery link
     remove_action('wp_head', 'feed_links_extra', 3);                      // Remove all extra rss feed links
-    remove_action('wp_head', 'wp_shortlink_wp_head', 10);              // Remove shortlink
+    remove_action('wp_head', 'wp_shortlink_wp_head');                     // Remove shortlink
     remove_action('wp_head', 'wp_oembed_add_discovery_links');            // Remove oembed links
     remove_action('wp_head', 'start_post_rel_link');                      // Remove rel links
     remove_action('wp_head', 'index_rel_link');
     remove_action('wp_head', 'parent_post_rel_link');
     remove_action('wp_head', 'adjacent_posts_rel_link');
-    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
     remove_action('wp_head', 'rest_output_link_wp_head');                 // Remove REST-API link
     remove_action('set_comment_cookies', 'wp_set_comment_cookies');       // Remove commments cookies
-    remove_action('template_redirect', 'wp_shortlink_header', 11);     // Remove HTTP headers
+    remove_action('template_redirect', 'wp_shortlink_header', 11);        // Remove HTTP headers
     remove_action('template_redirect', 'rest_output_link_header', 11);
 
     add_filter('the_generator', '__return_empty_string');                 // Removes the generator name from the RSS feeds
