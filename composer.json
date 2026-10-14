@@ -44,8 +44,8 @@
     "roots/wordpress": "7.1.*",
     "roots/wp-config": "^1.0",
     "vendor/elementor-pro": "^4.3",
-    "vendor/happyfiles-pro": "^1.8",
-    "vendor/perfmatters": "^2.5",
+    "vendor/happyfiles-pro": "^1.9",
+    "vendor/perfmatters": "^2.6",
     "vlucas/phpdotenv": "^5.0",
     "wp-plugin/analytics-insights": "^6.3",
     "wp-plugin/autodescription": "^5.1",
@@ -55,8 +55,8 @@
     "wp-plugin/images-to-webp": "^5.0",
     "wp-plugin/menu-caching": "^1.1",
     "wp-plugin/no-nonsense": "^3.6",
-    "wp-plugin/redirection": "^5.9",
-    "wp-theme/hello-elementor": "^3.4"
+    "wp-plugin/redirection": "^5.10",
+    "wp-theme/hello-elementor": "^3.5"
   },
   "require-dev": {
     "laravel/pint": "^1.0",
@@ -72,6 +72,7 @@
     "sort-packages": true,
     "allow-plugins": {
       "composer/installers": true,
+      "mindtwo/wplang": true,
       "pestphp/pest-plugin": true,
       "roots/wordpress-core-installer": true
     }
