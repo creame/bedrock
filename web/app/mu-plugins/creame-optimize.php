@@ -191,7 +191,7 @@ add_filter('wp_get_attachment_metadata', function($data){
         $data['sizes']['full'] = ['file' => false, 'width' => 0, 'height' => 0];
     }
     // Clear empty sizes.
-    $data['sizes'] = array_filter($data['sizes'] ?? []);
+    $data['sizes'] = isset($data['sizes']) && is_array($data['sizes']) ? array_filter($data['sizes']) : [];
     return $data;
 });
 
