@@ -159,6 +159,7 @@ Config::define('WP_MEMORY_LIMIT', '256M');
 // Enable cache
 Config::define('WP_CACHE', true);
 Config::define('WP_CACHE_KEY_SALT', 'example');
+Config::define('WP_REDIS_DISABLE_COMMENT', true);
 
 // Disable script concatenation
 Config::define('CONCATENATE_SCRIPTS', false);
