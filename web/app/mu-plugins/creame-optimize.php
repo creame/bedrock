@@ -183,12 +183,13 @@ add_action('template_redirect', function(){ if (is_attachment()) wp_redirect(wp_
 
 // Fix PHP warnings for SVG, JSON, etc. without sizes
 add_filter('wp_get_attachment_metadata', function($data){
-    // Ensure 'full' size exists during AJAX requests.
-    if (wp_doing_ajax() && !isset($data['sizes']['full'])){
-        $data['sizes']['full'] = ['file' => false, 'width' => 0, 'height' => 0];
-    }
+    $data = is_array($data) ? $data : [];
     // Clear empty sizes.
     $data['sizes'] = isset($data['sizes']) && is_array($data['sizes']) ? array_filter($data['sizes']) : [];
+    // Ensure 'full' size exists during AJAX requests (only non-resizable files, never saved into real images).
+    if (wp_doing_ajax() && !isset($data['sizes']['full']) && (empty($data['width']) || empty($data['height']))){
+        $data['sizes']['full'] = ['file' => false, 'width' => 0, 'height' => 0];
+    }
     return $data;
 });
 
