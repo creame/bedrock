@@ -25,9 +25,6 @@ if (WP_ENV === 'production') add_action('admin_init', function(){
  * ============================================================================
  */
 
-// Hide update WordPress message
-add_action('admin_head', function(){ remove_action('admin_notices', 'update_nag', 3); }, 1);
-
 // Remove WordPress logo on admin bar
 add_action('add_admin_bar_menus', function(){ remove_action('admin_bar_menu', 'wp_admin_bar_wp_menu'); });
 
