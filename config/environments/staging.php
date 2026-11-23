@@ -26,5 +26,4 @@ Config::define('DISABLED_PLUGINS', serialize([
   'autoptimize/autoptimize.php',
   'bunnycdn/bunnycdn.php',
   'cache-enabler/cache-enabler.php',
-  'ithemes-security-pro/ithemes-security-pro.php',
 ]));
