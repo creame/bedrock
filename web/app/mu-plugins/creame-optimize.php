@@ -423,8 +423,9 @@ add_action('admin_enqueue_scripts', function(){
 define('AUTOPTIMIZE_WP_SITE_URL', WP_HOME); // Autoptimize, for url replace
 define('SEIWP_SITE_URL', home_url('/'));    // Search Engine Insights, site url
 
-// Images to WebP set base path
+// Images to AVIF/WebP set base path
 add_filter('itw_abspath', function($path){ return trailingslashit(WP_CONTENT_DIR); });
+add_filter('images_to_avif_abspath', function($path){ return trailingslashit( WP_CONTENT_DIR ); });
 
 
 /**
